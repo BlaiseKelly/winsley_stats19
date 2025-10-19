@@ -12,10 +12,14 @@ The period of 2010 to 2024 has been chosen as the [cost
 data](https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods)
 runs for these years.
 
-The numbers quoted in this report and the plots and charts are fully
-reproducible in the script “analysis” in [this
+The data is made up of 3 databases, collision data, with location,
+weather conditions etc, casualty, detailing severity of collisions, age,
+sex and a vehicle database (which has not been used for this analysis)
+giving characteristics of vehicles involved. All 3 are linked by the
+“collision index”. The numbers quoted in this report and the plots and
+charts are fully reproducible in the script “analysis.R” in [this
 repository](https://github.com/BlaiseKelly/winsley_stats19). Many of the
-Serious and Slight figures might be given as decimals, i.e. 0.8 Serious
+Serious and Slight figures might be shown as decimals, i.e. 0.8 Serious
 and 0.2 Slight. This is because injuries are reclassified
 retrospectively according to the [MAIS 3+
 score](https://assets.publishing.service.gov.uk/media/5a7f62b840f0b62305b86d3b/rrcgb2015-03.pdf)
@@ -23,7 +27,7 @@ to enable fair comparisons between casualties and also enable
 comparisons between countries (e.g. the WHO only considers fatal
 collisions in its reporting because so many countries don’t report
 serious and slight injuries due to difficulties in documentation
-training etc.)
+training etc.).
 
 ## Trends
 
@@ -68,10 +72,11 @@ for the period 2010-2024 and summarised in the table and plot below.
 ![](plots/cc_bar.png) The total value of prevention for the period comes
 to £7,645,665, an average of just over £500,000 per year.
 
-For Bradford Road alone the cost of the 3 collisions in this period
-comes to £616,050, broken down in the table below.
-![](plots/bradford_road_table.png) \# Extra data Breaking down the total
-casualties in this period by some other variables
+For Bradford Road alone the cost of the 3 collisions (2 of which were
+multi-vehicle collisions) in this period comes to £616,050, broken down
+in the table below. ![](plots/bradford_road_table.png) \# Extra data
+Breaking down the total casualties in this period by some other
+variables
 
 ## Age and sex
 
