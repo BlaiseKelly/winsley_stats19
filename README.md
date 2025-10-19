@@ -38,7 +38,9 @@ The chart below shows the total casualties by severity between 2010 and
 
 and the change year on year relative to 2010.
 
-![](plots/index.png) \## Location
+![](plots/index.png)
+
+## Location
 
 The location of the casualties is shown below. Different casualty types
 are given a unique shape and coloured to aid distinction on the map.
@@ -98,9 +100,13 @@ variables
 
 ## Junctions
 
-![](plots/junction_type.png) \## Weather conditions
+![](plots/junction_type.png)
 
-![](plots/weather_conditions.png) \## Lighting
+## Weather conditions
+
+![](plots/weather_conditions.png)
+
+## Lighting
 
 ![](plots/lighting.png)
 
