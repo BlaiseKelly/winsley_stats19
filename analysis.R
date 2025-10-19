@@ -53,8 +53,6 @@ winsley_osm <- osmactive::get_travel_network(place = "Winsley", boundary = pc_wi
 winsley_d <- get_driving_network(winsley_osm) |>
   st_transform(27700)
 
-ons_cost <- read_ods("https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods", sheet = "Average_value")
-
 # Define the URL and a temporary file path
 url <- "https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods"
 tmpfile <- tempfile(fileext = ".ods")
@@ -135,7 +133,7 @@ chart_2 %>%
         legend.title = element_blank()) +
   scale_x_continuous(expand = c(0, 0)) +
   geom_hline(yintercept=100, linetype='dotted', col = 'black')+
-  ggtitle(paste0("Chart: Index of casualties by severity, Winsley: 2010 - 2024 (Index 2010=100)")) +
+  ggtitle(paste0("Index of casualties by severity, Winsley: 2010 - 2024 (Index 2010=100)")) +
   scale_x_continuous(name = NULL,
                      breaks = seq(2004, 2024, by = 1)  # Add more tick marks
   ) +
@@ -191,7 +189,7 @@ ggplot(sac_all, aes(x = age_band, y = pc_ksi, fill = sex_of_casualty)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by sex and age, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by sex and age, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -234,7 +232,7 @@ ggplot(year_count, aes(x = collision_year, y = value, fill = variable)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Total casualties by severity and year, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Total casualties by severity and year, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -262,7 +260,7 @@ ggplot(road_surface, aes(x = road_surface_conditions, y = pc_ksi, fill = variabl
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by road surface condition, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by road surface condition, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -290,7 +288,7 @@ ggplot(road_surface, aes(x = road_surface_conditions, y = pc_ksi, fill = variabl
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by road surface condition, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by road surface condition, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -317,7 +315,7 @@ ggplot(junction, aes(x = junction_detail, y = pc_ksi, fill = variable)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by junction type, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by junction type, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -345,7 +343,7 @@ ggplot(speed, aes(x = speed_limit, y = pc_ksi, fill = variable)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by speed limit, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by speed limit, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -372,7 +370,7 @@ ggplot(light, aes(x = light_conditions, y = pc_ksi, fill = variable)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by lighting conditions, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by lighting conditions, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -400,7 +398,7 @@ ggplot(weather, aes(x = weather_conditions, y = pc_ksi, fill = variable)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by speed limit, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by speed limit, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -488,7 +486,7 @@ cwc_tot <- cwc |>
          collision_cost = prettyNum(collision_cost, big.mark = ",", scientific = FALSE),
          total = prettyNum(total, big.mark = ",", scientific = FALSE))
 
-cc_tot <- sum(as.numeric(gsub(",","", cwc_tot$total)))
+cc_tot_all <- sum(as.numeric(gsub(",","", cwc_tot$total)))
 
 # country table
 t1 <- gt(cwc_tot,auto_align = TRUE) |>
@@ -571,7 +569,7 @@ ggplot(chart_0, aes(x = year, y = cost, fill = `cost category`)) +
     size = 3
   ) +
   ggtitle(paste0(
-    "Chart: annual value of prevention of collisions in Winsley"
+    "annual value of prevention of collisions in Winsley"
   ),subtitle = "Calculated using collision data from DfT STATS19 and cost data from TAG") +
   dft_theme +
   theme(
@@ -677,7 +675,7 @@ ggplot(casualty_type, aes(x = short_name, y = pc_ksi, fill = variable)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Chart: Percentage of casualties, by casualty type, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by casualty type, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
