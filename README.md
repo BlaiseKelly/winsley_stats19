@@ -38,16 +38,19 @@ The chart below shows the total casualties by severity between 2010 and
 
 and the change year on year relative to 2010.
 
-![](plots/index.png) \## Location The location of the casualties is
-shown below. Different casualty types are given a unique shape and
-coloured to aid distinction on the map.
+![](plots/index.png) \## Location
+
+The location of the casualties is shown below. Different casualty types
+are given a unique shape and coloured to aid distinction on the map.
 
 ![](plots/cas_type_map.png) And the same plot as above but sized by
 severity.
 
 ![](plots/cas_type_sev_map.png) All the casualties OSM links
 
-![](plots/cas_osm_links.png) \## DfT avoided cost methodology
+![](plots/cas_osm_links.png)
+
+## DfT avoided cost methodology
 
 The DfT’s RAS4001 dataset provides annual estimates of the economic
 value of preventing road collisions and casualties in Great Britain.
@@ -74,7 +77,10 @@ to £7,645,665, an average of just over £500,000 per year.
 
 For Bradford Road alone the cost of the 3 collisions (2 of which were
 multi-vehicle collisions) in this period comes to £616,050, broken down
-in the table below. ![](plots/bradford_road_table.png) \# Extra data
+in the table below. ![](plots/bradford_road_table.png)
+
+# Extra data
+
 Breaking down the total casualties in this period by some other
 variables
 
@@ -93,7 +99,10 @@ variables
 ## Junctions
 
 ![](plots/junction_type.png) \## Weather conditions
-![](plots/weather_conditions.png) \## Lighting ![](plots/lighting.png)
+
+![](plots/weather_conditions.png) \## Lighting
+
+![](plots/lighting.png)
 
 ## Road surface
 
