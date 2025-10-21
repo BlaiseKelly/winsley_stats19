@@ -9,6 +9,8 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
+      - href: docs/cost_osm_links.html
+        text: Map2
 
 format:
   html:

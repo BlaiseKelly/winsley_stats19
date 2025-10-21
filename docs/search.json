@@ -1,16 +1,16 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "These pages publish results of an analysis of the DfT Stats19 data for the Parish of Winsley, Wiltshire."
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "winsley_stats19",
     "section": "",
     "text": "library(tmap)\n\ncost_all_osm &lt;- readRDS(\"data/osm_link_cost.RDS\")\n\ntmap_mode(\"view\")\n\nℹ tmap mode set to \"view\".\n\ntm_shape(cost_all_osm) +\n  tm_lines(col = \"total_cost\", col.scale = tm_scale_continuous(\n    n = 10,\n    limits = c(min(cost_all_osm$total_cost),max(cost_all_osm$total_cost)),\n    values = \"rainbow_bgyr_35_85_c73\"\n  ), lwd = 4)+\n  tm_legend(title = \"cost (£)\", height = 60, frame = FALSE)+\n  tm_title(\"cost of collisions by osm road link. Winsley: 2010 and 2024\")\n\n\n── tmap v3 code detected ───────────────────────────────────────────────────────\n[v3-&gt;v4] `tm_legend()`: use 'tm_legend()' inside a layer function, e.g.\n'tm_polygons(..., fill.legend = tm_legend())'\n\n\n\n\n\n\n#tmap_save(tm3, filename = \"docs/cost_osm_links.html\", selfcontained = TRUE)"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "These pages publish results of an analysis of the DfT Stats19 data for the Parish of Winsley, Wiltshire."
   }
 ]
