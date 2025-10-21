@@ -2,4 +2,4 @@
 page-layout: full
 ---
 
-<iframe src="maps/cost_osm_links.html"  class="mapframe"></iframe>
+<iframe src="maps/cost_osm_links.html"  style="width:100vw; height:100vh; border:none;></iframe>

@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "map.html",
+    "href": "map.html",
+    "title": "winsley_stats19",
+    "section": "",
+    "text": "&lt;iframe src=“maps/cost_osm_links.html” style=“width:100vw; height:100vh; border:none;&gt;"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
