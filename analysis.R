@@ -25,7 +25,7 @@ dir.create("data/")
 
 #casualties <- get_stats19("2004", type = "casualty")
 
-load("D:/OneDrive/github/stats19_insights/data/Winsley_crashes.RData")
+#load("D:/OneDrive/github/stats19_insights/data/collisions_crashes.RData")
 
 # get parish shapes for UK
 pc <- st_read("https://files.planning.data.gov.uk/dataset/parish.geojson")
@@ -72,20 +72,26 @@ ons_cost_form <- ons_cost[-1,1:5]
 # replace with manual names
 names(ons_cost_form) <- c("collision_data_year","price_year","severity","cost_per_casualty","cost_per_collision")
 
-# make the crash data sf to intersect with Winsley geometry
+# base_year <- 2010
+
+# # make the crash data sf to intersect with Winsley geometry
 cra_winsley <- format_sf(crashes) |>
   st_join(pc_winsley) |>
   filter(name == town)
-
-base_year <- 2010
-
-# fil
+#
+# # fill
 cas_winsley <- casualties |>
   filter(collision_index %in% cra_winsley$collision_index)|>
-  filter(collision_year >= base_year) |>
+  filter(collision_year >= base_year)
+
+#save(cra_winsley, cas_winsley, file = "data/cra_cas_winsley.Rdata")
+
+#load("data/cra_cas_winsley.Rdata")
+
+cas_summary <- cas_winsley |>
   mutate(fatal_count = if_else(casualty_severity == "Fatal", 1, 0)) |>
-  select(collision_index, casualty_type, pedestrian_location, fatal_count, casualty_adjusted_severity_serious, casualty_adjusted_severity_slight) |>
-  group_by(collision_index) |>
+  select(collision_index, collision_year, casualty_type, pedestrian_location, fatal_count, casualty_adjusted_severity_serious, casualty_adjusted_severity_slight) |>
+  group_by(collision_index, collision_year) |>
   summarise(Fatal = sum(fatal_count),
             Serious = sum(casualty_adjusted_severity_serious,na.rm = TRUE),
             Slight = sum(casualty_adjusted_severity_slight,na.rm = TRUE))
@@ -93,19 +99,13 @@ cas_winsley <- casualties |>
 #save(casualties, cra_winsley, file = "data/Winsley_crashes.RData")
 
 cra_winsley_2010_dat <- cra_winsley |>
-  filter(collision_index %in% cas_winsley$collision_index) |>
+  filter(collision_index %in% cas_summary$collision_index) |>
   st_set_geometry(NULL) |>
   select(collision_index, collision_year, speed_limit, time, day_of_week,first_road_number, junction_detail,
          first_road_class, second_road_number, second_road_class, light_conditions,weather_conditions,datetime,
          road_surface_conditions)
 
-cas_rates <- casualties |>
-  filter(collision_year >= base_year & collision_index %in% cas_winsley$collision_index) |>
-  mutate(fatal_count = if_else(casualty_severity == "Fatal", 1, 0)) |>  # add a column for fatal tally to enable same method to be used for serious and slight
-  group_by(collision_index, collision_year) |>
-  summarise(Fatal = sum(fatal_count),
-            Serious = sum(casualty_adjusted_severity_serious,na.rm = TRUE),
-            Slight = sum(casualty_adjusted_severity_slight,na.rm = TRUE)) |>
+cas_rates <- cas_summary |>
   group_by(collision_year) |>
   summarise(Fatal = sum(Fatal),
             Serious = sum(Serious,na.rm = TRUE),
@@ -148,11 +148,11 @@ chart_2 %>%
 ggsave("plots/index.png")
 
 cas_dat <- casualties |>
-  filter(collision_index %in% cas_winsley$collision_index) |>
+  filter(collision_index %in% cas_summary$collision_index) |>
   select(collision_index, age_of_casualty, casualty_imd_decile, casualty_reference)
 
 cas_age <- casualties |>
-  filter(collision_index %in% cas_winsley$collision_index) |>
+  filter(collision_index %in% cas_summary$collision_index) |>
   mutate(age_band = cut(as.numeric(age_of_casualty), breaks=c(0,11,15,19,24,29,39,49,59,69,100),labels=c("0-11","12-15","16-19","20-24","25-29","30-39","40-49","50-59","60-69","70+"))) |>
   group_by(age_band) %>%
   summarise(Serious = sum(casualty_adjusted_severity_serious,na.rm = TRUE),
@@ -161,14 +161,14 @@ cas_age <- casualties |>
 #sum(cas_age$Serious)+sum(cas_age$Slight)
 
 cas_sex <- casualties |>
-  filter(collision_index %in% cas_winsley$collision_index) |>
+  filter(collision_index %in% cas_summary$collision_index) |>
   mutate(age_band = cut(as.numeric(age_of_casualty), breaks=c(0,11,15,19,24,29,39,49,59,69,100),labels=c("0-11","12-15","16-19","20-24","25-29","30-39","40-49","50-59","60-69","70+"))) |>
   group_by(sex_of_casualty) %>%
   summarise(Serious = sum(casualty_adjusted_severity_serious,na.rm = TRUE),
             Slight = sum(casualty_adjusted_severity_slight,na.rm = TRUE))
 
 sac_all <- casualties |>
-  filter(collision_index %in% cas_winsley$collision_index) |>
+  filter(collision_index %in% cas_summary$collision_index) |>
   mutate(age_band = cut(as.numeric(age_of_casualty), breaks=c(0,11,15,19,24,29,39,49,59,69,100),labels=c("0-11","12-15","16-19","20-24","25-29","30-39","40-49","50-59","60-69","70+"))) |>
   group_by(sex_of_casualty, age_band) %>%
   summarise(Serious = sum(casualty_adjusted_severity_serious,na.rm = TRUE),
@@ -206,12 +206,11 @@ ggplot(sac_all, aes(x = age_band, y = pc_ksi, fill = sex_of_casualty)) +
 
 ggsave("plots/sex_age.png")
 
-
 cra_winsley_2010 <- cra_winsley |>
   filter(collision_year >= 2010) |>
   st_set_geometry(NULL) |>
-  select(collision_index, collision_year) |>
-  left_join(cas_winsley, by = "collision_index") |>
+  select(collision_index) |>
+  left_join(cas_summary, by = "collision_index") |>
   melt(c("collision_index", "collision_year")) |>
   filter(value > 0)
 
@@ -219,7 +218,7 @@ cra_other <- cra_winsley_2010 |>
   left_join(cra_winsley_2010_dat, by = "collision_index")
 
 # Define colours and theme
-cols <- rev(c("#1de9b6", "#006853", "#ff7733"))
+cols <- c("#006853","#1de9b6", "#ff7733")
 cust_theme <- theme(panel.grid.major = element_line(size = 2))
 dft_theme <- list(cust_theme, scale_fill_manual(values = cols))  # use fill, not color
 
@@ -275,7 +274,7 @@ casualty_type <- cra_other |>
 #   ylab(NULL)+
 #   xlab(NULL)+
 #   labs(caption = "Source: Stats19")
-# 
+#
 # ggsave("plots/road_surface.png")
 
 # road surface
@@ -403,7 +402,7 @@ ggplot(weather, aes(x = weather_conditions, y = pc_ksi, fill = variable)) +
     vjust = -0.5,
     size = 3
   ) +
-  ggtitle(paste0("Percentage of casualties, by speed limit, Winsley: 2010 to 2024")) +
+  ggtitle(paste0("Percentage of casualties, by weather conditions, Winsley: 2010 to 2024")) +
   dft_theme +
   theme(
     panel.background = element_blank(),
@@ -420,7 +419,7 @@ dow <- cra_other |>
   group_by(day_of_week, variable) |>
   summarise(casualties = sum(value))
 
-# crash_time <- cas_winsley |>
+# crash_time <- cas_summary |>
 #   left_join(cra_L5Y, by = "collision_index") |> # join crashes as number of vehicles is included, quicker than calculating from veh table
 #   select(datetime, Fatal_Pedestrian, Serious_Pedestrian) |>
 #   mutate(#collision_hr = lubridate::hour(datetime),
@@ -588,7 +587,7 @@ ggplot(chart_0, aes(x = year, y = cost, fill = `cost category`)) +
 
 ggsave("plots/cc_bar.png")
 
-# 
+#
 cra_winsley_2010 <- cra_winsley |>
   filter(collision_year >= 2010)
 
@@ -722,7 +721,7 @@ roads_cra_match <- function(osm_network_sf, crash_sf, crs){
 
 
 cas_winsley_osm <- cas_winsley_type |>
-  st_set_geometry(NULL) |> 
+  st_set_geometry(NULL) |>
   group_by(osm_id) |>
   summarise(cas_rd = n())
 
@@ -733,17 +732,68 @@ rd_details <- data.frame(osm_id = c("4305512","4317206","4329918","4330011","503
                                   "Bath Road","NA","Murhill Lane","Winsley Road"),
                          maxspeed = c("50mph", "60mph", "50mph", "20mph", "60mph", "60mph", "60mph", "30mph","40mph","30mph","40mph", "40mph", "30mph","50mph", "60mph", "60mph","30mph","40mph"))
 
-cas_bradford <- cas_winsley_type |> 
-  left_join(rd_details, by = "osm_id") |> 
-  filter(name == "Bradford Road") |> 
-  left_join(crashes, by = "collision_index")
-  
+cra_winsley_df <- cra_winsley |> st_set_geometry(NULL)
 
-cost_bradford <- cas_bradford |> 
-  st_set_geometry(NULL) |> 
-  ungroup() |> 
-  transmute(collision_year = as.character(collision_year), casualty_type, number_of_vehicles, Serious, Slight) |> 
-  melt(c("collision_year", "casualty_type", "number_of_vehicles")) |> 
+winsley_rds <- select(winsley_d, osm_id)
+
+cost_all_osm <- cas_winsley_type |>
+  left_join(cra_winsley_df, by = "collision_index") |>
+  st_set_geometry(NULL) |>
+  ungroup() |>
+  transmute(osm_id, collision_year = as.character(collision_year), Serious, Slight) |>
+  melt(c("collision_year", "osm_id")) |>
+  ungroup() |>
+  left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
+  rowwise() |>
+  mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
+         collision_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision)))) |>
+  group_by(osm_id) |>
+  summarise(casualty_cost = round(sum(casualty_cost)),
+            collision_cost = round(sum(collision_cost))) |>
+  mutate(total_cost = casualty_cost+collision_cost) |>
+  left_join(rd_details, by = "osm_id") |>
+  left_join(winsley_rds, by = "osm_id")
+
+B3108 <- filter(cost_all_osm, grepl("B3108", name))
+sum(B3108$total_cost)
+
+st_geometry(cost_all_osm) <- cost_all_osm$geometry
+
+tm3 <- tm_shape(bm)+
+  tm_rgb()+
+  tm_shape(cost_all_osm) +
+  tm_lines(col = "total_cost", col.scale = tm_scale_continuous(
+    n = 10,
+    limits = c(min(cost_all_osm$total_cost),max(cost_all_osm$total_cost)),
+    values = "rainbow_bgyr_35_85_c73"
+  ), lwd = 4,title = "cost (£)")+
+  tm_legend(title = "cost (£)", height = 60, frame = FALSE)+
+  tm_title("cost of collisions by osm road link. Winsley: 2010 and 2024")
+
+tmap_save(tm3, "plots/cost_osm_links.png", width = 7500, height = 7000, dpi = 800)
+
+tm3 <- tm_shape(cost_all_osm) +
+  tm_lines(col = "total_cost", col.scale = tm_scale_continuous(
+    n = 10,
+    limits = c(min(cost_all_osm$total_cost),max(cost_all_osm$total_cost)),
+    values = "rainbow_bgyr_35_85_c73"
+  ), lwd = 4)+
+  tm_legend(title = "cost (£)", height = 60, frame = FALSE)+
+  tm_title("cost of collisions by osm road link. Winsley: 2010 and 2024")
+
+tmap_save(tm3, filename = "plots/cost_osm_links.html", selfcontained = TRUE)
+
+cas_bradford <- cas_winsley_type |>
+  left_join(rd_details, by = "osm_id") |>
+  filter(name == "Bradford Road") |>
+  left_join(crashes, by = "collision_index")
+
+
+cost_bradford <- cas_bradford |>
+  st_set_geometry(NULL) |>
+  ungroup() |>
+  transmute(collision_year = as.character(collision_year), casualty_type, number_of_vehicles, Serious, Slight) |>
+  melt(c("collision_year", "casualty_type", "number_of_vehicles")) |>
   left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
   rowwise() |>
   mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
@@ -753,18 +803,17 @@ cost_bradford <- cas_bradford |>
             collision_cost = round(sum(collision_cost)))
 
 cas_bradford_cost <- cas_bradford |>
-  st_set_geometry(NULL) |> 
-  select(collision_index, collision_year, datetime, casualty_type, number_of_casualties, Slight, Serious,number_of_vehicles) 
-  
+  st_set_geometry(NULL) |>
+  ungroup() |>
+  transmute(datetime, casualty_type, number_of_casualties, Slight = round(Slight,2), Serious = round(Serious,2),number_of_vehicles)
+
 cas_bradford_cost$collision_cost = prettyNum(cost_bradford$collision_cost, big.mark = ",", scientific = FALSE)
 cas_bradford_cost$casualty_cost = prettyNum(cost_bradford$casualty_cost, big.mark = ",", scientific = FALSE)
 
 # country table
 t3 <- gt(cas_bradford_cost,auto_align = TRUE) |>
-  cols_width(collision_year ~px(60)) |>
-  cols_label(collision_index = md("**Collision index**"),
-             collision_year = md("**Year**"),
-             datetime = md("**Date & time**"),
+  cols_width(datetime ~px(200)) |>
+  cols_label(datetime = md("**Date & time**"),
              casualty_type = md("**Casualty type**"),
              number_of_casualties = md("**Number of casualties**"),
              Slight = md("**Slight**"),
@@ -786,12 +835,6 @@ t3 <- gt(cas_bradford_cost,auto_align = TRUE) |>
               heading.border.bottom.style = "none",
               table.border.bottom.style = "none",) |>
   tab_style(
-    style = cell_text(weight = "bold"),
-    locations = list(
-      cells_column_labels(columns = c(collision_year)),
-      cells_body(columns = c(collision_year))
-    )) |>
-  tab_style(
     style = cell_fill(color = "white"),
     locations = cells_body(columns = everything())
   )
@@ -799,11 +842,11 @@ t3 <- gt(cas_bradford_cost,auto_align = TRUE) |>
 gtsave(t3, "plots/bradford_road_table.png")
 
 bradford_cost <- sum(cost_bradford$casualty_cost, cost_bradford$casualty_cost)
-  
+
 
 winsley_d_cas <- winsley_d |>
   select(osm_id, name, maxspeed) |>
-  left_join(cas_winsley_osm, by = "osm_id") |> 
+  left_join(cas_winsley_osm, by = "osm_id") |>
   filter(!is.na(cas_rd)) |>
   select(-name, -maxspeed) |>
   left_join(rd_details, by = "osm_id")
