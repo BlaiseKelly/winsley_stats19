@@ -1,5 +1,4 @@
 ---
-title: "winsley_stats19"
 page-layout: full
 ---
 
