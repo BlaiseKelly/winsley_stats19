@@ -9,8 +9,8 @@ website:
       - href: index.qmd
         text: Home
       - about.qmd
-      - href: plots/cost_osm_links.html
-        text: Graph
+      - href: docs/cost_osm_links.html
+        text: Map
 
 format:
   html:
