@@ -10,7 +10,7 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - href: map.qmd
+      - href: maps/cost_osm_links.html
         text: Map
       - href: about.qmd
         text: About
