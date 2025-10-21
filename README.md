@@ -81,6 +81,10 @@ For Bradford Road alone the cost of the 3 collisions (2 of which were
 multi-vehicle collisions) in this period comes to £616,050, broken down
 in the table below. ![](plots/bradford_road_table.png)
 
+## Cost per road link
+
+![](plots/cost_osm_links.png)
+
 # Extra data
 
 Breaking down the total casualties in this period by some other
