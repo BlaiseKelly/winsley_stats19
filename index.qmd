@@ -5,23 +5,4 @@ format:
     embed-resources: true
 ---
 
-```{r}
-
-library(tmap)
-
-cost_all_osm <- readRDS("data/osm_link_cost.RDS")
-
-tmap_mode("view")
-
-tm_shape(cost_all_osm) +
-  tm_lines(col = "total_cost", col.scale = tm_scale_continuous(
-    n = 10,
-    limits = c(min(cost_all_osm$total_cost),max(cost_all_osm$total_cost)),
-    values = "rainbow_bgyr_35_85_c73"
-  ), lwd = 4)+
-  tm_legend(title = "cost (£)", height = 60, frame = FALSE)+
-  tm_title("cost of collisions by osm road link. Winsley: 2010 and 2024")
-
-#tmap_save(tm3, filename = "docs/cost_osm_links.html", selfcontained = TRUE)
-
-```
+<iframe src="cost_osm_links.html" width="100%" height="90vh" style="border:none;"></iframe>
