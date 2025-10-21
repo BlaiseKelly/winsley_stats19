@@ -1,16 +1,31 @@
-/* Remove padding and margins for full-width map pages */
+/* Remove all page margins/padding */
 main.content {
   padding: 0 !important;
   margin: 0 !important;
   max-width: 100% !important;
 }
 
-/* Full-viewport iframe for maps */
+/* Make the iframe fill everything below the navbar */
 iframe.mapframe {
   display: block;
-  width: 100vw; /* full browser width */
-  height: calc(100vh - 60px); /* fills screen below navbar; adjust 60px if needed */
+  position: fixed;
+  top: var(--navbar-height, 56px); /* adjust if navbar is taller */
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - var(--navbar-height, 56px));
   border: none;
   margin: 0;
   padding: 0;
+  z-index: 0;
+}
+
+/* Ensure navbar stays visible and above the map */
+.navbar, .navbar * {
+  z-index: 10 !important;
+  position: relative;
+}
+
+/* Optional: remove background behind the map */
+body, main.content {
+  background-color: transparent !important;
 }
