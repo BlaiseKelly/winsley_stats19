@@ -1,11 +1,1 @@
 /* css styles */
-
-/* Make iframe maps fill the viewport */
-iframe.mapframe {
-  display: block;
-  width: 100vw;
-  height: calc(100vh - 60px); /* adjust 60px if your navbar is taller */
-  border: none;
-  margin: 0;
-  padding: 0;
-}
