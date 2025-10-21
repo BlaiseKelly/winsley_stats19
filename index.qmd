@@ -5,4 +5,4 @@ format:
     embed-resources: true
 ---
 
-<iframe src="cost_osm_links.html" width="100%" height="90vh" style="border:none;"></iframe>
+<iframe src="cost_osm_links.html" width="100%" height="100%" style="border:none;"></iframe>
