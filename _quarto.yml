@@ -9,7 +9,9 @@ website:
       - href: index.qmd
         text: Home
       - href: maps/cost_osm_links.html
-        text: Map2
+        text: Cost per road link
+      - href: maps/cas_type_sev_map.html
+        text: Collision location
       - href: about.qmd
         text: About
 
