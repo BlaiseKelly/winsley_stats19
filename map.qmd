@@ -1,5 +1,11 @@
 ---
-page-layout: full
+format:
+  html:
+    page-layout: full
+    theme: none
+    css: map-style.css
 ---
 
-[View Fullscreen Map](maps/cost_osm_links.html)
+<div class="map-container">
+  <iframe src="maps/cost_osm_links.html"></iframe>
+</div>
