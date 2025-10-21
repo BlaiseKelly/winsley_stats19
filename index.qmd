@@ -1,8 +1,6 @@
 ---
 title: "winsley_stats19"
-format:
-  html:
-    embed-resources: true
+page-layout: full
 ---
 
 <iframe src="maps/cost_osm_links.html" width="100%" height="100%" style="border:none;"></iframe>
