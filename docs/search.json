@@ -2,9 +2,79 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Stats19",
+    "title": "Winsley Stats19 analysis",
     "section": "",
-    "text": "Lots of useful stuff"
+    "text": "This is a break down of the DfT Stats19 data for the Parish Council of Winsley, Wiltshire shown by the orange line in the figure below.\n\nThe period of 2010 to 2024 has been chosen as the cost data runs for these years.\nThe data is made up of 3 databases, collision data, with location, weather conditions etc, casualty, detailing severity of collisions, age, sex and a vehicle database (which has not been used for this analysis) giving characteristics of vehicles involved. All 3 are linked by the “collision index”. The numbers quoted in this report and the plots and charts are fully reproducible in the script “analysis.R” in this repository. Many of the Serious and Slight figures might be shown as decimals, i.e. 0.8 Serious and 0.2 Slight. This is because injuries are reclassified retrospectively according to the MAIS 3+ score to enable fair comparisons between casualties and also enable comparisons between countries (e.g. the WHO only considers fatal collisions in its reporting because so many countries don’t report serious and slight injuries due to difficulties in documentation training etc.).\n\n\nThe chart below shows the total casualties by severity between 2010 and 2024.\n\nand the change year on year relative to 2010.\n\n\n\n\nThe location of the casualties is shown below. Different casualty types are given a unique shape and coloured to aid distinction on the map.\n And the same plot as above but sized by severity.\n All the casualties OSM links\n\n\n\n\nThe DfT’s RAS4001 dataset provides annual estimates of the economic value of preventing road collisions and casualties in Great Britain. Developed from long-standing DfT methodologies dating back to the 1990s, it combines collision and casualty data from the STATS19 reporting system with cost estimates from the TAG data book, covering human costs (pain, suffering, lost life), lost economic output, medical expenses, and property damage. Values are updated regularly to reflect inflation and changes in data collection. The dataset reports average and total costs per casualty and per collision by severity (fatal, serious, slight, and damage-only). It is widely used by government and local authorities to assess the economic burden of road traffic collisions and to support cost-benefit analyses of safety interventions.\nThe value in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.\n\n The total value of prevention for the period comes to £7,645,665, an average of just over £500,000 per year.\nFor Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehicle collisions) in this period comes to £616,050, broken down in the table below."
+  },
+  {
+    "objectID": "index.html#trends",
+    "href": "index.html#trends",
+    "title": "Winsley Stats19 analysis",
+    "section": "",
+    "text": "The chart below shows the total casualties by severity between 2010 and 2024.\n\nand the change year on year relative to 2010."
+  },
+  {
+    "objectID": "index.html#location",
+    "href": "index.html#location",
+    "title": "Winsley Stats19 analysis",
+    "section": "",
+    "text": "The location of the casualties is shown below. Different casualty types are given a unique shape and coloured to aid distinction on the map.\n And the same plot as above but sized by severity.\n All the casualties OSM links"
+  },
+  {
+    "objectID": "index.html#dft-avoided-cost-methodology",
+    "href": "index.html#dft-avoided-cost-methodology",
+    "title": "Winsley Stats19 analysis",
+    "section": "",
+    "text": "The DfT’s RAS4001 dataset provides annual estimates of the economic value of preventing road collisions and casualties in Great Britain. Developed from long-standing DfT methodologies dating back to the 1990s, it combines collision and casualty data from the STATS19 reporting system with cost estimates from the TAG data book, covering human costs (pain, suffering, lost life), lost economic output, medical expenses, and property damage. Values are updated regularly to reflect inflation and changes in data collection. The dataset reports average and total costs per casualty and per collision by severity (fatal, serious, slight, and damage-only). It is widely used by government and local authorities to assess the economic burden of road traffic collisions and to support cost-benefit analyses of safety interventions.\nThe value in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.\n\n The total value of prevention for the period comes to £7,645,665, an average of just over £500,000 per year.\nFor Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehicle collisions) in this period comes to £616,050, broken down in the table below."
+  },
+  {
+    "objectID": "index.html#age-and-sex",
+    "href": "index.html#age-and-sex",
+    "title": "Winsley Stats19 analysis",
+    "section": "Age and sex",
+    "text": "Age and sex"
+  },
+  {
+    "objectID": "index.html#casualty-type",
+    "href": "index.html#casualty-type",
+    "title": "Winsley Stats19 analysis",
+    "section": "Casualty type",
+    "text": "Casualty type"
+  },
+  {
+    "objectID": "index.html#speed-limit",
+    "href": "index.html#speed-limit",
+    "title": "Winsley Stats19 analysis",
+    "section": "Speed limit",
+    "text": "Speed limit"
+  },
+  {
+    "objectID": "index.html#junctions",
+    "href": "index.html#junctions",
+    "title": "Winsley Stats19 analysis",
+    "section": "Junctions",
+    "text": "Junctions"
+  },
+  {
+    "objectID": "index.html#weather-conditions",
+    "href": "index.html#weather-conditions",
+    "title": "Winsley Stats19 analysis",
+    "section": "Weather conditions",
+    "text": "Weather conditions"
+  },
+  {
+    "objectID": "index.html#lighting",
+    "href": "index.html#lighting",
+    "title": "Winsley Stats19 analysis",
+    "section": "Lighting",
+    "text": "Lighting"
+  },
+  {
+    "objectID": "index.html#road-surface",
+    "href": "index.html#road-surface",
+    "title": "Winsley Stats19 analysis",
+    "section": "Road surface",
+    "text": "Road surface"
   },
   {
     "objectID": "about.html",
