@@ -1,5 +1,6 @@
 ---
+title: "Stats19"
 page-layout: full
 ---
 
-<iframe src="maps/cost_osm_links.html"  class="mapframe"></iframe>
+Lots of useful stuff
