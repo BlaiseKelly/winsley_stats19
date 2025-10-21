@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  resources:
+    - maps/*.html
 
 website:
   title: "winsley_stats19"
@@ -8,17 +10,14 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - about.qmd
-      - href: docs/cost_osm_links.html
-        text: Map2
+      - href: about.qmd
+        text: About
 
 format:
   html:
     theme:
       - cosmo
-      - brand
     css: styles.css
-    toc: true
 
 
 

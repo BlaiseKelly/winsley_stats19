@@ -1,1 +1,16 @@
-/* css styles */
+/* Remove padding and margins for full-width map pages */
+main.content {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: 100% !important;
+}
+
+/* Full-viewport iframe for maps */
+iframe.mapframe {
+  display: block;
+  width: 100vw; /* full browser width */
+  height: calc(100vh - 60px); /* fills screen below navbar; adjust 60px if needed */
+  border: none;
+  margin: 0;
+  padding: 0;
+}
