@@ -4,7 +4,7 @@ page-layout: full
 ---
 
 # Introduction
-This is a break down of the DfT Stats19 data for the Parish Council of Winsley, Wiltshire shown by the orange line in the figure below.
+This is a breakdown of the DfT Stats19 data for the Parish Council of Winsley, Wiltshire shown by the orange line in the figure below.
 
 ![](plots/winsley.png)
 
@@ -35,21 +35,30 @@ All the casualties OSM links
 
 ## DfT avoided cost methodology
 
-The DfT’s RAS4001 dataset provides annual estimates of the economic value of preventing road collisions and casualties in Great Britain. Developed from long-standing DfT methodologies dating back to the 1990s, it combines collision and casualty data from the STATS19 reporting system with cost estimates from the [TAG data book](https://www.gov.uk/guidance/transport-analysis-guidance-tag), covering human costs (pain, suffering, lost life), lost economic output, medical expenses, and property damage. Values are updated regularly to reflect inflation and changes in data collection. The dataset reports average and total costs per casualty and per collision by severity (fatal, serious, slight, and damage-only). It is widely used by government and local authorities to assess the economic burden of road traffic collisions and to support cost-benefit analyses of safety interventions.
+The DfT’s RAS4001 dataset provides annual estimates of the economic value of preventing road collisions and casualties in Great Britain. Developed from long-standing DfT methodologies dating back to the 1990s, it combines collision and casualty data from the STATS19 reporting system with cost estimates from the [TAG data book](https://www.gov.uk/guidance/transport-analysis-guidance-tag), covering human costs (pain, suffering, lost life), lost economic output, medical expenses, and property damage. Values are updated regularly to reflect inflation and changes in data collection. The dataset reports average and total costs per collision and the proportion of that value related to casualty costs, by severity (fatal, serious, slight, and damage-only). It is widely used by government and local authorities to assess the economic burden of road traffic collisions and to support cost-benefit analyses of safety interventions.
 
-The value in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.
+The values in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.
 
 ![](plots/annual_table.png)
 
 ![](plots/cc_bar.png)
 The total value of prevention for the period comes to £7,645,665, an average of just over £500,000 per year.
 
-For Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehicle collisions) in this period comes to £616,050, broken down in the table below.
-![](plots/bradford_road_table.png)
-
 ## Cost per road link
 
 ![](plots/cost_osm_links.png)
+
+# Bradford Road
+For Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehicle collisions) in this period comes to £616,050, broken down in the table below.
+![](plots/bradford_road_table.png)
+
+# B3108 by-pass
+A significant topic in the local area is the B3108.
+
+Below is a plot of the Lower Super Area Output (LSOA) regions where casualties from collisions on the road live.
+![](plots/casualty_lsoa.png)
+And the same plot but for drivers who were involved in collisions on the road (note this also includes cyclist 'drivers').
+![](plots/driver_lsoa.png)
 
 # Extra data
 
