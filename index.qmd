@@ -62,11 +62,11 @@ The Department for Transport (DfT) also publishes economic estimates for prevent
 
  - Human costs (pain, suffering, loss of life),  
  
- -Medical and rehabilitation costs,  
+ - Medical and rehabilitation costs,  
 
- -Lost economic output,  
+ - Lost economic output,  
 
- -Property damage.  
+ - Property damage.  
 
 This dataset combines STATS19 collision records with cost values from the [TAG data book](https://www.gov.uk/guidance/transport-analysis-guidance-tag), adjusted regularly for inflation and changes in data recording. 
 
@@ -86,7 +86,7 @@ For Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehi
 ![](plots/bradford_road_table.png)
 
 # B3108 by-pass
-A significant topic in the local area is the B3108.
+A significant point of discussion in the local area is the B3108.
 
 The table below shows the collisions for the section that runs through the village. The total cost of prevention for these is estimated at £972,376 in the period 2010 - 2024.
 
