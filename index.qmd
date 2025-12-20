@@ -4,26 +4,50 @@ page-layout: full
 ---
 
 # Introduction
-This is a breakdown of the DfT Stats19 data for the Parish Council of Winsley, Wiltshire shown by the orange line in the figure below.
+This report presents an examination of road collision and casualty data for the Parish of Winsley in Wiltshire, based on the UK Department for Transport’s official STATS19 database. shown by the orange line in the figure below.
 
 ![](plots/winsley.png)
 
-The period of 2010 to 2024 has been chosen as the [cost data](https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods) runs for these years.
+The analysis covers the period 2010 to 2024, chosen because this is the range for which corresponding [cost data](https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods) cost data are available.
 
-The data is made up of 3 databases, collision data, with location, weather conditions etc, casualty, detailing severity of collisions, age, sex and a vehicle database (which has not been used for this analysis) giving characteristics of vehicles involved. All 3 are linked by the "collision index". The numbers quoted in this report and the plots and charts are fully reproducible in the script "analysis.R" in [this repository](https://github.com/BlaiseKelly/winsley_stats19). Many of the Serious and Slight figures might be shown as decimals, i.e. 0.8 Serious and 0.2 Slight. This is because injuries are reclassified retrospectively according to the [MAIS 3+ score](https://assets.publishing.service.gov.uk/media/5a7f62b840f0b62305b86d3b/rrcgb2015-03.pdf) to enable fair comparisons between casualties and also enable comparisons between countries (e.g. the WHO only considers fatal collisions in its reporting because so many countries don't report serious and slight injuries due to difficulties in documentation training etc.).
+The underlying dataset comprises three linked tables collected via the STATS19 system:  
 
-## Trends
-The chart below shows the total casualties by severity between 2010 and 2024.
+ - Collision Data: Information about each recorded incident, including location, environmental conditions, and road characteristics.  
+
+ - Casualty Data: Records of everyone injured or killed in collisions, detailing injury severity, age, and sex.  
+
+ - Vehicle Data: Characteristics of vehicles involved in collisions. Note: vehicle data were not included in the main analysis for this report.  
+
+All three tables are connected through a unique identifier called the collision index, enabling linked summaries of collisions and casualties for analysis.
+
+Where fractional counts (e.g., 0.8 Serious, 0.2 Slight) appear in the charts and tables, this reflects the use of the [MAIS 3+ score](https://assets.publishing.service.gov.uk/media/5a7f62b840f0b62305b86d3b/rrcgb2015-03.pdf) to retrospectively reclassify injury severity. This adjustment allows for fairer comparisons over time and between countries, aligning with international approaches such as those used by the World Health Organization, which typically focus on fatal collisions due to variations in reporting practices across regions. 
+
+All results shown here — including numbers, charts, maps, and cost summaries — can be reproduced using the analysis.R script available in the [project repository](https://github.com/BlaiseKelly/winsley_stats19). Many of the Serious and Slight figures might be shown as decimals, i.e. 0.8 Serious and 0.2 Slight. This is because injuries are reclassified retrospectively according to the  to enable fair comparisons between casualties and also enable comparisons between countries (e.g. the WHO only considers fatal collisions in its reporting because so many countries don't report serious and slight injuries due to difficulties in documentation training etc.).
+
+## Trends in Casualties (2010–2024)
+The first section assesses trends in road casualties over time.
+
+Total Casualties and Severity
+
+Between 2010 and 2024, the overall number of reported casualties in Winsley is summarised by severity levels (fatal, serious, slight). The time-series chart displays yearly totals.
 
 ![](plots/year_totals.png)
 
-and the change year on year relative to 2010.
+ The change in annual casualties relative to the baseline year 2010. This allows us to see whether the number and severity of casualties are increasing, decreasing, or stable over this 15-year period.
 
 ![](plots/index.png)
 
-## Location
+## Where Collisions are Happening (Location)
 
-The location of the casualties is shown below. Different casualty types are given a unique shape and coloured to aid distinction on the map.
+The next part visualises the spatial distribution of collisions within Winsley.  
+
+ - Casualty locations are plotted on a map.  
+
+ - Different casualty types are shown with distinct symbols and colours to help differentiate severity and type.  
+
+ - A second map sizes points by severity to highlight where serious and slight injuries are clustered.  
+
+These maps reveal local hotspots where collisions occur and provide insight into whether particular parts of the parish experience higher incidence or more severe outcomes.
 
 ![](plots/cas_type_map.png)
 And the same plot as above but sized by severity.
@@ -33,9 +57,18 @@ All the casualties OSM links
 
 ![](plots/cas_osm_links.png)
 
-## DfT avoided cost methodology
+## Economic Impact: DfT Avoided Cost Analysis
+The Department for Transport (DfT) also publishes economic estimates for preventing road casualties and collisions, known as the RAS4001 dataset. This model calculates the monetary cost of collisions based on:  
 
-The DfT’s RAS4001 dataset provides annual estimates of the economic value of preventing road collisions and casualties in Great Britain. Developed from long-standing DfT methodologies dating back to the 1990s, it combines collision and casualty data from the STATS19 reporting system with cost estimates from the [TAG data book](https://www.gov.uk/guidance/transport-analysis-guidance-tag), covering human costs (pain, suffering, lost life), lost economic output, medical expenses, and property damage. Values are updated regularly to reflect inflation and changes in data collection. The dataset reports average and total costs per collision and the proportion of that value related to casualty costs, by severity (fatal, serious, slight, and damage-only). It is widely used by government and local authorities to assess the economic burden of road traffic collisions and to support cost-benefit analyses of safety interventions.
+ - Human costs (pain, suffering, loss of life),  
+ 
+ -Medical and rehabilitation costs,  
+
+ -Lost economic output,  
+
+ -Property damage.  
+
+This dataset combines STATS19 collision records with cost values from the [TAG data book](https://www.gov.uk/guidance/transport-analysis-guidance-tag), adjusted regularly for inflation and changes in data recording. 
 
 The values in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.
 
@@ -49,7 +82,7 @@ The total value of prevention for the period comes to £13,233,889, an average o
 ![](plots/cost_osm_links.png)
 
 # Bradford Road
-For Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehicle collisions) in this period comes to £616,050, broken down in the table below.
+For Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehicle collisions) in this period comes to £371,938, broken down in the table below.
 ![](plots/bradford_road_table.png)
 
 # B3108 by-pass

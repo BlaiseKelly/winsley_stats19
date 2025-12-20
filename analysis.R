@@ -3,7 +3,8 @@
 library(sf)
 library(mapview)
 library(dplyr)
-library(stats19)
+#library(stats19)
+devtools::load_all("../stats19_match/")
 library(geographr)
 library(reshape2)
 library(ggplot2)
@@ -56,23 +57,7 @@ winsley_osm <- osmactive::get_travel_network(place = town, boundary = pc_winsley
 winsley_d <- get_driving_network(winsley_osm) |>
   st_transform(27700)
 
-# Define the URL and a temporary file path
-url <- "https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods"
-tmpfile <- tempfile(fileext = ".ods")
-
-# Download the file
-download.file(url, destfile = tmpfile, mode = "wb")
-
-# Now read the ODS file from the local path
-ons_cost <- read_ods(tmpfile, sheet = "Average_value", skip = 3)
-
-# adjust the names which are badly formatted
-ons_cost_form <- ons_cost[-1,1:5]
-
-# replace with manual names
-names(ons_cost_form) <- c("collision_data_year","price_year","severity","cost_per_casualty","cost_per_collision")
-
-# base_year <- 2010
+base_year <- 2010
 
 # # make the crash data sf to intersect with Winsley geometry
 cra_winsley <- format_sf(crashes) |>
@@ -460,35 +445,16 @@ dow <- cra_other |>
 #   labs(x = "Hour starting", caption = "Source: Stats19")
 
 # costs
-cwc <- cra_winsley_2010 |>
-  mutate(collision_year = as.character(collision_year)) |>
-  left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
-  rowwise() |>
-  mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
-          collision_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision)))) |>
-  group_by(collision_year, variable) |>
-  summarise(total_casualties = round(sum(value),1),
-            casualty_cost = round(sum(casualty_cost)),
-            collision_cost = round(sum(collision_cost)))
+cwc <- crashes |>
+  filter(collision_index %in% cra_winsley$collision_index & collision_year >= base_year)
 
-cwc_cas_type <- cra_winsley_2010 |>
-  mutate(collision_year = as.character(collision_year)) |>
-  left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
-  rowwise() |>
-  mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
-         collision_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision)))) |>
-  group_by(collision_year, variable) |>
-  summarise(total_casualties = round(sum(value),1),
-            casualty_cost = round(sum(casualty_cost)),
-            collision_cost = round(sum(collision_cost)))
+cwc_tot <- match_tag(crashes = cwc,match_with = "severity") |>
+  group_by(collision_year, collision_severity) |>
+  summarise(total_casualties = round(sum(as.numeric(number_of_casualties)),1),
+            total = prettyNum(cost_per_collision,big.mark = ",", scientific = FALSE),
+            casualty_cost = prettyNum(round(sum(cost_per_casualty)),, big.mark = ",", scientific = FALSE),
+            collision_cost = prettyNum(round(cost_per_collision-cost_per_casualty), big.mark = ",", scientific = FALSE))
 
-cwc_tot <- cwc |>
-  ungroup() |>
-  rowwise() |>
-  mutate(total = casualty_cost+collision_cost) |>
-  mutate(casualty_cost = prettyNum(casualty_cost, big.mark = ",", scientific = FALSE),
-         collision_cost = prettyNum(collision_cost, big.mark = ",", scientific = FALSE),
-         total = prettyNum(total, big.mark = ",", scientific = FALSE))
 
 cc_tot_all <- sum(as.numeric(gsub(",","", cwc_tot$total)))
 
@@ -496,7 +462,7 @@ cc_tot_all <- sum(as.numeric(gsub(",","", cwc_tot$total)))
 t1 <- gt(cwc_tot,auto_align = TRUE) |>
   cols_width(collision_year ~px(60)) |>
   cols_label(collision_year = md("**Year**"),
-             variable = md("**Severity**"),
+             collision_severity = md("**Severity**"),
              total_casualties = md("**Casualties**"),
              casualty_cost = md("**Casualty cost**"),
              collision_cost = md("**Collision cost**"),
@@ -535,7 +501,10 @@ cas_yr <- cra_winsley_2010 |>
   summarise(total_casualties = round(sum(value),1))
 
 cwc_yr <- cra_winsley_2010 |>
-  mutate(collision_year = as.character(collision_year)) |>
+  mutate(collision_year = as.character(collision_year))
+
+cwc_yr <- match_tag(cwc_yr, match_with = "severity")
+
   left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
   rowwise() |>
   mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
