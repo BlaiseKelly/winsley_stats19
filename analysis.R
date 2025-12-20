@@ -26,7 +26,9 @@ dir.create("data/")
 
 #casualties <- get_stats19("2004", type = "casualty")
 
-#load("D:/OneDrive/github/stats19_insights/data/collisions_crashes.RData")
+vehicles = get_stats19(year = "2004", type = "vehicle")
+
+load("D:/OneDrive/github/stats19_insights/data/collisions_crashes.RData")
 
 # get parish shapes for UK
 pc <- st_read("https://files.planning.data.gov.uk/dataset/parish.geojson")
@@ -449,23 +451,24 @@ cwc <- crashes |>
   filter(collision_index %in% cra_winsley$collision_index & collision_year >= base_year)
 
 cwc_tot <- match_tag(crashes = cwc,match_with = "severity") |>
+  ungroup() |>
+  select(collision_year, collision_severity,number_of_casualties,cost_per_collision) |>
   group_by(collision_year, collision_severity) |>
   summarise(total_casualties = round(sum(as.numeric(number_of_casualties)),1),
-            total = prettyNum(cost_per_collision,big.mark = ",", scientific = FALSE),
-            casualty_cost = prettyNum(round(sum(cost_per_casualty)),, big.mark = ",", scientific = FALSE),
-            collision_cost = prettyNum(round(cost_per_collision-cost_per_casualty), big.mark = ",", scientific = FALSE))
+            total = round(sum(cost_per_collision))) |>
+  ungroup()
+
+cwc_tot$total = prettyNum(cwc_tot$total, big.mark = ",", scientific = FALSE)
 
 
 cc_tot_all <- sum(as.numeric(gsub(",","", cwc_tot$total)))
 
 # country table
 t1 <- gt(cwc_tot,auto_align = TRUE) |>
-  cols_width(collision_year ~px(60)) |>
+  cols_width(collision_year ~px(40)) |>
   cols_label(collision_year = md("**Year**"),
              collision_severity = md("**Severity**"),
              total_casualties = md("**Casualties**"),
-             casualty_cost = md("**Casualty cost**"),
-             collision_cost = md("**Collision cost**"),
              total = md("**Total**")) |>
   tab_footnote(md("**Source: DfT STATS19 and TAG**")) |>
   tab_header(
@@ -491,8 +494,11 @@ t1 <- gt(cwc_tot,auto_align = TRUE) |>
     locations = cells_body(columns = everything())
   )
 
+gt(cwc_tot)
+
 gtsave(t1, "plots/annual_table.png")
 
+gtsave(t1, "plots/annual_table.html")
 
 
 cas_yr <- cra_winsley_2010 |>
@@ -501,19 +507,15 @@ cas_yr <- cra_winsley_2010 |>
   summarise(total_casualties = round(sum(value),1))
 
 cwc_yr <- cra_winsley_2010 |>
-  mutate(collision_year = as.character(collision_year))
+  mutate(collision_severity = variable)
 
-cwc_yr <- match_tag(cwc_yr, match_with = "severity")
-
-  left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
-  rowwise() |>
-  mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
-         collision_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision)))) |>
+cwc_yr <- match_tag(cwc_yr, match_with = "severity") |>
+  mutate(collision_cost = cost_per_collision-cost_per_casualty) |>
   group_by(collision_year) |>
-  summarise(casualty_cost = round(sum(casualty_cost)),
-            collision_cost = round(sum(collision_cost)))
+  summarise(collision_cost = round(sum(collision_cost)),
+            casualty_cost = round(sum(cost_per_casualty)))
 
-
+total_period = sum(cwc_yr$collision_cost+cwc_yr$casualty_cost)/14
 
 chart_0 <- cwc_yr |>
   melt(c("collision_year")) |>
@@ -717,14 +719,9 @@ cost_all_osm <- cas_winsley_type |>
   mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
          collision_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision)))) |>
   group_by(osm_id) |>
-  summarise(casualty_cost = round(sum(casualty_cost)),
-            collision_cost = round(sum(collision_cost))) |>
-  mutate(total_cost = casualty_cost+collision_cost) |>
+  summarise(total_cost = round(sum(collision_cost))) |>
   left_join(rd_details, by = "osm_id") |>
   left_join(winsley_rds, by = "osm_id")
-
-B3108 <- filter(cost_all_osm, grepl("B3108", name))
-sum(B3108$total_cost)
 
 st_geometry(cost_all_osm) <- cost_all_osm$geometry
 
@@ -757,6 +754,290 @@ cas_bradford <- cas_winsley_type |>
   filter(name == "Bradford Road") |>
   left_join(crashes, by = "collision_index")
 
+vehicles_to_single_row <- function(vehicles, summarise_categories = TRUE) {
+  if (summarise_categories) {
+    vehicles <- dplyr::left_join(vehicles, vehicle_groups, by = "vehicle_type") %>%
+      dplyr::transmute(collision_index, vehicle_type = summary_type)
+  } else {
+    vehicles <- dplyr::transmute(vehicles, collision_index, vehicle_type)
+  }
+
+  veh_summary <- vehicles %>%
+    dplyr::group_by(collision_index, vehicle_type) %>%
+    dplyr::mutate(number_vehicles = 1) %>%
+    dplyr::summarise(number_vehicles = sum(number_vehicles), .groups = "drop") %>%
+    tidyr::pivot_wider(names_from = "vehicle_type", values_from = "number_vehicles")
+
+  veh_summary
+}
+
+vehicles_summary = vehicles_to_single_row(vehicles = vehicles,summarise_categories = FALSE)
+
+dat_b3108 <- casualties |>
+  filter(collision_index %in% cra_winsley$collision_index)|>
+  filter(collision_year >= 2010) |>
+  inner_join(cra_winsley)
+
+st_geometry(dat_b3108) <- dat_b3108$geometry
+
+dat_b3108$osm_id <- winsley_d$osm_id[st_nearest_feature(dat_b3108,winsley_d)]
+
+dat_b3108 <- dat_b3108 |>
+  left_join(rd_details, by = "osm_id") |>
+  filter(grepl("B3108", name.y)) |>
+  inner_join(vehicles)
+
+st_geometry(dat_b3108) <- NULL
+
+dat_b3108$casualty_imd_decile
+
+dat_out <- dat_b3108 |>
+  select(collision_index = as.character(collision_index),
+         road_name = name.y,
+         speed_limit,
+         date = as.character(datetime),
+         casualty_type,Serious,Slight,
+          number_of_vehicles,light_conditions,weather_conditions,road_surface_conditions,did_police_officer_attend_scene_of_accident)
+
+
+
+write.csv(dat_b3108, "casualty_collision_b3108.csv", row.names = FALSE)
+
+
+match_2021_lsoa <- function(casualties = NULL,
+                            vehicles = NULL) {
+  if (!is.null(casualties)) {
+    df2match <- casualties
+    col_nam <- "lsoa_of_casualty"
+  } else {
+    df2match <- vehicles
+    col_nam <- "lsoa_of_driver"
+  }
+
+  # lookup tables
+  lsoa_lookup_01 <- geographr::lookup_lsoa01_lsoa11 %>%
+    dplyr::select(lsoa01_code, lsoa11_name, lsoa11_code) %>%
+    dplyr::distinct(lsoa11_code, .keep_all = TRUE)
+
+  lsoa_lookup_21 <- geographr::lookup_lsoa11_lsoa21_ltla22 %>%
+    dplyr::select(lsoa11_code, lsoa21_name, lsoa21_code)
+
+  # stage 1: 01 -> 11 -> 21
+  lsoas_1 <- df2match %>%
+    dplyr::select(dplyr::all_of(col_nam)) %>%
+    dplyr::left_join(lsoa_lookup_01,
+                     by = setNames("lsoa01_code", col_nam)) %>%
+    dplyr::filter(!is.na(lsoa11_code)) %>%
+    dplyr::select(dplyr::all_of(col_nam), lsoa11_code) %>%
+    dplyr::left_join(lsoa_lookup_21, by = "lsoa11_code") %>%
+    dplyr::select(dplyr::all_of(col_nam), lsoa21_code, lsoa21_name)
+
+  # stage 2: 11 -> 21
+  lsoas_2 <- df2match %>%
+    dplyr::select(dplyr::all_of(col_nam)) %>%
+    dplyr::left_join(lsoa_lookup_21,
+                     by = setNames("lsoa11_code", col_nam)) %>%
+    dplyr::filter(!is.na(lsoa21_code)) %>%
+    dplyr::select(dplyr::all_of(col_nam), lsoa21_code, lsoa21_name)
+
+  # stage 3: already 21
+  lsoas_3 <- df2match %>%
+    dplyr::select(dplyr::all_of(col_nam)) %>%
+    dplyr::left_join(lsoa_lookup_21,
+                     by = setNames("lsoa21_code", col_nam)) %>%
+    dplyr::filter(!is.na(lsoa21_name)) %>%
+    dplyr::select(dplyr::all_of(col_nam), lsoa21_name) %>%
+    dplyr::mutate(lsoa21_code = !!rlang::sym(col_nam))
+
+  # combine
+  lsoas <- dplyr::bind_rows(lsoas_1, lsoas_2, lsoas_3) %>%
+    dplyr::distinct(!!rlang::sym(col_nam), .keep_all = TRUE)
+
+  df_lsoa <- df2match %>%
+    dplyr::left_join(lsoas, by = col_nam)
+
+  df_lsoa
+}
+
+
+
+get_lsoa21_geo <- function(provider = "geographr", lsoa_code, lsoa_name){
+
+  if(provider == "geographr"){
+    lsoa_geo = geographr::boundaries_lsoa21 |>
+      select(lsoa21_code,lsoa21_name,geometry)
+  } else {
+    # download LSOA gpkg from https://communitiesopendata-communities.hub.arcgis.com/datasets/4da63019f25546aa92a922a5ea682950_0/explore?location=52.533125%2C-2.489482%2C7.17
+    lsoa_geo = st_read(provider) |>
+      select(lsoa21_code = {{lsoa_code}},lsoa21_name = {{lsoa_name}},geometry = SHAPE)
+  }
+
+  return(lsoa_geo)
+
+}
+
+lsoa_geo <- get_lsoa21_geo()
+
+cas_b3108 <- filter(casualties,collision_index %in% dat_b3108$collision_index)
+
+cas_lsoa <- match_2021_lsoa(casualties = cas_b3108) |>
+  group_by(lsoa21_code) |>
+  summarise(tot_cas = n()) |>
+  left_join(lsoa_geo, by = c("lsoa21_code"))
+
+st_geometry(cas_lsoa) = cas_lsoa$geometry
+
+veh_b3108 <- filter(vehicles,collision_index %in% dat_b3108$collision_index)
+
+veh_lsoa <- match_2021_lsoa(vehicles = veh_b3108) |>
+  group_by(lsoa21_code) |>
+  summarise(drivers = n()) |>
+  left_join(lsoa_geo, by = c("lsoa21_code"))
+
+st_geometry(veh_lsoa) = veh_lsoa$geometry
+
+lsoa_summaries <- function(casualties = NULL, vehicles = NULL, lsoa_geo,
+                           city_shp, casualty_type,base_year,end_year){
+
+  if(!is.null(casualties)){
+    groups_lsoa <- match_2021_lsoa(casualties = casualties)
+  }
+  if(!is.null(vehicles)){
+    groups_lsoa <- match_2021_lsoa(vehicles = vehicles)
+  }
+
+  lsoa21_cent <- st_centroid(lsoa_geo) |>
+    st_transform(27700)
+
+  lsoa21_city = lsoa21_cent[city_shp,]
+
+  lsoa21_outside <- lsoa21_cent |>
+    filter(!lsoa21_code %in% lsoa21_city$lsoa21_code) |>
+    filter(lsoa21_name %in% groups_lsoa$lsoa21_name)
+
+  lsoa21_outside$dist2city_km <- as.numeric(st_distance(city_shp, lsoa21_outside)[1,])/1000
+
+  lsoa21_outside$distances <- cut(lsoa21_outside$dist2city_km, c(0,5,10,20,40,80,1000), c("0 - 5", "6 - 10","11 - 20", "20 - 40", "40 - 80", "81+"))
+
+  st_geometry(lsoa21_outside) <- NULL
+
+
+  groups_lsoa <- groups_lsoa |>
+    group_by(lsoa21_name) |>
+    summarise(persons = n()) |>
+    filter(!is.na(lsoa21_name)) |>
+    left_join(lsoa_geo, by = "lsoa21_name") |>
+    left_join(lsoa21_outside, by = "lsoa21_name")
+
+  st_geometry(groups_lsoa) <- groups_lsoa$geometry
+
+  return(groups_lsoa)
+
+}
+
+cas_lsoa <- lsoa_summaries(casualties = cas_b3108,lsoa_geo = lsoa_geo, city_shp = pc_winsley) |>
+  mutate(lsoa21_code = lsoa21_code.x)
+
+veh_lsoa <- lsoa_summaries(vehicles = veh_b3108,lsoa_geo = lsoa_geo, city_shp = pc_winsley)
+
+# function to plot any super output area/local authority
+lsoa_home_plot <- function(casualty_df = NULL, vehicle_df = NULL, variable,lsoa_geo,city_shp,bgd_map_buff = 0,bgd_map = FALSE, palette = "tol.rainbow_wh_br",base_year = 2020, end_year = 2024,
+                           info_position = c(0,0.2)){
+
+
+  if(!is.null(casualty_df)){
+    lsoa_all = lsoa_summaries(casualties = casualty_df,lsoa_geo = lsoa_geo,city_shp = city_shp,casualty_type = "All",base_year = base_year, end_year = end_year)
+    legend_title = "casualties"
+    title = paste0("Home LSOA area for all B3108 casualties between ", base_year, " and ", end_year)
+    credit_title = "distance (km)   casualties"
+    total_persons <- NROW(casualty_df)
+  }
+  if(!is.null(vehicle_df)){
+    lsoa_all = lsoa_summaries(vehicles = vehicle_df,lsoa_geo = lsoa_geo,city_shp = city_shp,casualty_type = "All",base_year = 2020, end_year = 2024)
+    legend_title = "drivers"
+    title = paste0("Home LSOA area for all drivers involved in collisions on B3108 between ", base_year, " and ", end_year)
+    credit_title = "distance (km)   drivers"
+    total_persons <- NROW(vehicle_df)
+  }
+
+  lsoa_city <- filter(lsoa_all, is.na(dist2city_km))
+
+  lsoa_outside_city <- lsoa_all |>
+    filter(!is.na(dist2city_km)) |>
+    st_set_geometry(NULL) |>
+    group_by(distances) |>
+    summarise(persons = sum(persons))
+
+  lsoa_missing <-  NROW(filter(lsoa_all, is.na(persons)))
+
+  city_buff <- st_buffer(city_shp,bgd_map_buff)
+
+  bm_ps <- basemaps::basemap_raster(ext = city_buff,map_service = "carto", map_type = "light")
+
+  tmap_mode("plot")
+
+  if(isTRUE(bgd_map)){
+
+  tm1 <- tm_shape(bm_ps)+
+    tm_rgb()
+
+  } else {tm1 = NULL}
+
+
+  tm1 <- tm1+
+    tm_shape(lsoa_all) +
+    tm_polygons(fill = "persons",fill_alpha = 0.7,
+                fill.scale = tm_scale_categorical(values = palette),
+                fill.legend = tm_legend(legend_title, frame = FALSE,legend.border.col = NA),
+                lwd = 0.1)+
+    tm_credits(
+      paste0("Distance of home LSOA\nliving outside of Winsley:\n",
+             credit_title, "\n",
+             lsoa_outside_city$distances[1],":       ", lsoa_outside_city$persons[1],"\n",
+             lsoa_outside_city$distances[2],":       ", lsoa_outside_city$persons[2],"\n",
+             lsoa_outside_city$distances[3],":       ", lsoa_outside_city$persons[3],"\n",
+             lsoa_outside_city$distances[4],":       ", lsoa_outside_city$persons[4],"\n",
+             lsoa_outside_city$distances[5],":       ", lsoa_outside_city$persons[5],"\n",
+             "total:      ", total_persons,"\n",
+             "no data:    ",  lsoa_missing),
+      position = info_position)+
+    tm_title(title,size = 2)+
+    tm_layout(frame = FALSE)
+
+  return(tm1)
+}
+
+tm_cas <- lsoa_home_plot(casualty_df = cas_b3108, lsoa_geo = lsoa_geo,city_shp = pc_winsley,bgd_map_buff = 5000,bgd_map = TRUE,info_position = c(0.55,0.29), base_year = 2010, end_year = 2024)
+
+tmap_save(tm_cas, "plots/casualty_lsoa.png")
+
+tm_veh <- lsoa_home_plot(vehicle_df = veh_b3108, lsoa_geo = lsoa_geo,city_shp = pc_winsley,bgd_map_buff = 5000,bgd_map = TRUE,info_position = c(0.1,0.28), base_year = 2010, end_year = 2024)
+
+tmap_save(tm_veh, "plots/driver_lsoa.png")
+
+cra_b3108 = crashes |>
+  filter(collision_index %in% cas_b3108$collision_index)
+
+cra_b3108_cost <- match_tag(crashes = cra_b3108)
+
+total_b3108 = sum(cra_b3108_cost$cost_per_collision)
+
+cas_lsoa <- left_join(matched_lsoa$l)
+# Define the URL and a temporary file path
+url <- "https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods"
+tmpfile <- tempfile(fileext = ".ods")
+
+# Download the file
+download.file(url, destfile = tmpfile, mode = "wb")
+
+# Now read the ODS file from the local path
+ons_cost <- read_ods(tmpfile, sheet = "Average_value", skip = 3)
+
+# adjust the names which are badly formatted
+ons_cost_form <- ons_cost[-1,1:5]
+
+# replace with manual names
+names(ons_cost_form) <- c("collision_data_year","price_year","severity","cost_per_casualty","cost_per_collision")
 
 cost_bradford <- cas_bradford |>
   st_set_geometry(NULL) |>
@@ -765,19 +1046,19 @@ cost_bradford <- cas_bradford |>
   melt(c("collision_year", "casualty_type", "number_of_vehicles")) |>
   left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
   rowwise() |>
-  mutate(casualty_cost = sum(value*as.numeric(gsub(",","", cost_per_casualty))),
-         collision_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision)))) |>
+  mutate(total_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision)))) |>
   group_by(collision_year) |>
-  summarise(casualty_cost = round(sum(casualty_cost)),
-            collision_cost = round(sum(collision_cost)))
+  summarise(total_cost = round(sum(total_cost)))
+
+
 
 cas_bradford_cost <- cas_bradford |>
   st_set_geometry(NULL) |>
   ungroup() |>
   transmute(datetime, casualty_type, number_of_casualties, Slight = round(Slight,2), Serious = round(Serious,2),number_of_vehicles)
 
-cas_bradford_cost$collision_cost = prettyNum(cost_bradford$collision_cost, big.mark = ",", scientific = FALSE)
-cas_bradford_cost$casualty_cost = prettyNum(cost_bradford$casualty_cost, big.mark = ",", scientific = FALSE)
+cas_bradford_cost$total_cost = prettyNum(cost_bradford$total_cost, big.mark = ",", scientific = FALSE)
+#cas_bradford_cost$casualty_cost = prettyNum(cost_bradford$casualty_cost, big.mark = ",", scientific = FALSE)
 
 # country table
 t3 <- gt(cas_bradford_cost,auto_align = TRUE) |>
@@ -785,11 +1066,8 @@ t3 <- gt(cas_bradford_cost,auto_align = TRUE) |>
   cols_label(datetime = md("**Date & time**"),
              casualty_type = md("**Casualty type**"),
              number_of_casualties = md("**Number of casualties**"),
-             Slight = md("**Slight**"),
-             Serious = md("**Serious**"),
              number_of_vehicles = md("**Number of vehicles**"),
-             collision_cost = md("**Collision cost**"),
-             casualty_cost = md("**Casualty cost**")) |>
+             total_cost = md("**Total cost**")) |>
   tab_footnote(md("**Source: DfT STATS19 and TAG**")) |>
   tab_header(
     title = md(paste0("**Number of reported road casualties and value of prevention for Bradford Road, Winsley: 2010 to 2024**"))) |>
@@ -810,7 +1088,59 @@ t3 <- gt(cas_bradford_cost,auto_align = TRUE) |>
 
 gtsave(t3, "plots/bradford_road_table.png")
 
-bradford_cost <- sum(cost_bradford$casualty_cost, cost_bradford$casualty_cost)
+cost_b3108 <- dat_b3108 |>
+  #st_set_geometry(NULL) |>
+  ungroup() |>
+  transmute(collision_year = as.character(collision_year), casualty_type,  Serious = casualty_adjusted_severity_serious, Slight = casualty_adjusted_severity_slight) |>
+  melt(c("collision_year", "casualty_type")) |>
+  left_join(ons_cost_form, by = c("collision_year" = "collision_data_year", "variable" = "severity")) |>
+  rowwise() |>
+  mutate(total_cost = sum(value*as.numeric(gsub(",", "", cost_per_collision))))
+
+
+cas_b3108_cost <- dat_b3108 |>
+  #st_set_geometry(NULL) |>
+  ungroup() |>
+  transmute(datetime, casualty_type, number_of_casualties, Slight = round(casualty_adjusted_severity_slight,2), Serious = round(casualty_adjusted_severity_serious,2),number_of_vehicles)
+
+cas_b3108_cost$total_cost = prettyNum(cost_b3108$total_cost, big.mark = ",", scientific = FALSE)
+#cas_bradford_cost$casualty_cost = prettyNum(cost_bradford$casualty_cost, big.mark = ",", scientific = FALSE)
+
+cost_b3108 = transmute(cra_b3108_cost, datetime,number_of_casualties,number_of_vehicles,collision_severity,cost_per_casualty = round(cost_per_casualty),cost_per_collision = round(cost_per_collision-cost_per_casualty))
+
+cost_b3108$cost_per_casualty = prettyNum(cost_b3108$cost_per_casualty, big.mark = ",", scientific = FALSE)
+cost_b3108$cost_per_collision = prettyNum(cost_b3108$cost_per_collision, big.mark = ",", scientific = FALSE)
+
+# country table
+t3 <- gt(cost_b3108,auto_align = TRUE) |>
+  cols_width(datetime ~px(200)) |>
+  cols_label(datetime = md("**Date & time**"),
+             number_of_casualties = md("**Number of casualties**"),
+             collision_severity = md("**Collision severity**"),
+             number_of_vehicles = md("**Number of vehicles**"),
+             cost_per_casualty = md("**Casualty cost**"),
+             cost_per_collision = md("**Collision cost**")) |>
+  tab_footnote(md("**Source: DfT STATS19 and TAG**")) |>
+  tab_header(
+    title = md(paste0("**Number of reported road casualties and value of prevention for Bradford Road, Winsley: 2010 to 2024**"))) |>
+  tab_options(heading.align = "left",
+              column_labels.border.top.style = "none",
+              table.border.top.style = "none",
+              column_labels.border.bottom.style = "none",
+              column_labels.border.bottom.width = 1,
+              column_labels.border.bottom.color = "black",
+              table_body.border.top.style = "none",
+              table_body.border.bottom.color = "white",
+              heading.border.bottom.style = "none",
+              table.border.bottom.style = "none",) |>
+  tab_style(
+    style = cell_fill(color = "white"),
+    locations = cells_body(columns = everything())
+  )
+
+gtsave(t3, "plots/b3108_table.png")
+
+bradford_cost <- sum(cost_bradford$total_cost)
 
 
 winsley_d_cas <- winsley_d |>
