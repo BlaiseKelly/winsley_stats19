@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Blaise Kelly">
 
-<title>Winsley Stats19 analysis – winsley_stats19</title>
+<title>B3108 – winsley_stats19</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -73,7 +74,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -93,7 +94,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
@@ -120,22 +121,28 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content column-page" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Winsley Stats19 analysis</h1>
+<h1 class="title">B3108</h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page">
+<div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Blaise Kelly </p>
+          </div>
+  </div>
     
   
     
@@ -148,100 +155,82 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<p>This report presents an examination of road collision and casualty data for the Parish of Winsley in Wiltshire, based on the UK Department for Transport’s official STATS19 database. shown by the orange line in the figure below.</p>
-<p><img src="plots/winsley.png" class="img-fluid"></p>
-<p>The analysis covers the period 2010 to 2024, chosen because this is the range for which corresponding <a href="https://assets.publishing.service.gov.uk/media/68d421cc275fc9339a248c8e/ras4001.ods">cost data</a> cost data are available.</p>
-<p>The underlying dataset comprises three linked tables collected via the STATS19 system:</p>
-<ul>
-<li><p>Collision Data: Information about each recorded incident, including location, environmental conditions, and road characteristics.</p></li>
-<li><p>Casualty Data: Records of everyone injured or killed in collisions, detailing injury severity, age, and sex.</p></li>
-<li><p>Vehicle Data: Characteristics of vehicles involved in collisions. Note: vehicle data were not included in the main analysis for this report.</p></li>
-</ul>
-<p>All three tables are connected through a unique identifier called the collision index, enabling linked summaries of collisions and casualties for analysis.</p>
-<p>Where fractional counts (e.g., 0.8 Serious, 0.2 Slight) appear in the charts and tables, this reflects the use of the <a href="https://assets.publishing.service.gov.uk/media/5a7f62b840f0b62305b86d3b/rrcgb2015-03.pdf">MAIS 3+ score</a> to retrospectively reclassify injury severity. This adjustment allows for fairer comparisons over time and between countries, aligning with international approaches such as those used by the World Health Organization, which typically focus on fatal collisions due to variations in reporting practices across regions.</p>
-<p>All results shown here — including numbers, charts, maps, and cost summaries — can be reproduced using the analysis.R script available in the <a href="https://github.com/BlaiseKelly/winsley_stats19">project repository</a>. Many of the Serious and Slight figures might be shown as decimals, i.e.&nbsp;0.8 Serious and 0.2 Slight. This is because injuries are reclassified retrospectively according to the to enable fair comparisons between casualties and also enable comparisons between countries (e.g.&nbsp;the WHO only considers fatal collisions in its reporting because so many countries don’t report serious and slight injuries due to difficulties in documentation training etc.).</p>
-<section id="trends-in-casualties-20102024" class="level2">
-<h2 class="anchored" data-anchor-id="trends-in-casualties-20102024">Trends in Casualties (2010–2024)</h2>
-<p>The first section assesses trends in road casualties over time.</p>
-<p>Total Casualties and Severity</p>
-<p>Between 2010 and 2024, the overall number of reported casualties in Winsley is summarised by severity levels (fatal, serious, slight). The time-series chart displays yearly totals.</p>
-<p><img src="plots/year_totals.png" class="img-fluid"></p>
-<p>The change in annual casualties relative to the baseline year 2010. This allows us to see whether the number and severity of casualties are increasing, decreasing, or stable over this 15-year period.</p>
-<p><img src="plots/index.png" class="img-fluid"></p>
-</section>
-<section id="where-collisions-are-happening-location" class="level2">
-<h2 class="anchored" data-anchor-id="where-collisions-are-happening-location">Where Collisions are Happening (Location)</h2>
-<p>The next part visualises the spatial distribution of collisions within Winsley.</p>
-<ul>
-<li><p>Casualty locations are plotted on a map.</p></li>
-<li><p>Different casualty types are shown with distinct symbols and colours to help differentiate severity and type.</p></li>
-<li><p>A second map sizes points by severity to highlight where serious and slight injuries are clustered.</p></li>
-</ul>
-<p>These maps reveal local hotspots where collisions occur and provide insight into whether particular parts of the parish experience higher incidence or more severe outcomes.</p>
-<p><img src="plots/cas_type_map.png" class="img-fluid"> And the same plot as above but sized by severity.</p>
-<p><img src="plots/cas_type_sev_map.png" class="img-fluid"> All the casualties OSM links</p>
-<p><img src="plots/cas_osm_links.png" class="img-fluid"></p>
-</section>
-<section id="economic-impact-dft-avoided-cost-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="economic-impact-dft-avoided-cost-analysis">Economic Impact: DfT Avoided Cost Analysis</h2>
-<p>The Department for Transport (DfT) also publishes economic estimates for preventing road casualties and collisions, known as the RAS4001 dataset. This model calculates the monetary cost of collisions based on:</p>
-<ul>
-<li><p>Human costs (pain, suffering, loss of life),</p></li>
-<li><p>Medical and rehabilitation costs,</p></li>
-<li><p>Lost economic output,</p></li>
-<li><p>Property damage.</p></li>
-</ul>
-<p>This dataset combines STATS19 collision records with cost values from the <a href="https://www.gov.uk/guidance/transport-analysis-guidance-tag">TAG data book</a>, adjusted regularly for inflation and changes in data recording.</p>
-<p>The values in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.</p>
-<p><img src="plots/annual_table.png" class="img-fluid"></p>
-<p><img src="plots/cc_bar.png" class="img-fluid"> The total value of prevention for the period comes to £13,233,889, an average of just over £945,000 per year.</p>
-</section>
-<section id="cost-per-road-link" class="level2">
-<h2 class="anchored" data-anchor-id="cost-per-road-link">Cost per road link</h2>
-<p><img src="plots/cost_osm_links.png" class="img-fluid"></p>
+<p>The B3108 goes between Bath</p>
+<section id="typical-speeds" class="level2">
+<h2 class="anchored" data-anchor-id="typical-speeds">Typical speeds</h2>
+<p>The Google Distance Matrix API enables a query between two points for a future date and using the “best guess” returns the estimated time to travel this distance based on historic data. This has been compared against measured data and found to be a good representation of vehicle speed. Model option “best guess” uses this historic data to estimate how long it might take based on past trips undertaken by people with Android phones.</p>
+<p>TAG cost guidance Provides costs for</p>
+<p>The Google Distance Matrix API enables users to query the estimated time between two points for a specific journey start time. The best_guess traffic model in the Google Distance Matrix API is the default method for estimating travel times when accounting for traffic conditions. It returns the best estimate of travel time based on both historical traffic conditions and live traffic data, with live traffic becoming more important the closer the departure time is to the current moment. Google This parameter can only be used for driving directions and requires specifying a departure time that is either current or in the future. Unlike the alternative traffic models (optimistic and pessimistic), which provide upper and lower bounds on travel time, best_guess aims to provide the most realistic single prediction by integrating real-time road conditions with historical patterns https://developers.google.com/maps/documentation/distance-matrix/distance-matrix</p>
+<p>The road was split into 6 sections, based on the Open Street Map (OSM) segments, with some segments joined together to simplify the model and reduce the number of calls to the Google API shown in more detail in the Appendix. Described from West to East, Link 1 (L01) is the section of Lower Stoke Road that joins Warminster Road. The colour of each link is the mean speed in both directions as per the scale shown in L06 from the Google Distance Matrix API queries. With each section is the speed profile split by direction.</p>
+<p><img src="plots/L01.png" class="img-fluid"> <img src="plots/speed_profile_L01_dayhour.png" class="img-fluid"> L02 is the section from Midford Brook bridge to the base of Winsley Hill. <img src="plots/L02.png" class="img-fluid"> <img src="plots/speed_profile_L02_dayhour.png" class="img-fluid"> L03 is Winsley Hill up to where the speed limit currently changes to 50 mph, at the junction with Woodlands Drive. <img src="plots/L03.png" class="img-fluid"> <img src="plots/speed_profile_L03_dayhour.png" class="img-fluid"> L04 is the 50mph section of the bypass, stretching all the way to the roundabout with Winsley and Bradford Roads. <img src="plots/L04.png" class="img-fluid"> <img src="plots/speed_profile_L04_dayhour.png" class="img-fluid"> L05 is the 40 mph section of Winsley Road <img src="plots/L05.png" class="img-fluid"> <img src="plots/speed_profile_L05_dayhour.png" class="img-fluid"> L06 the 30mph section of Winsley Road. <img src="plots/L06.png" class="img-fluid"> <img src="plots/speed_profile_L06_dayhour.png" class="img-fluid"></p>
+<p>Each segment was queried for each hour of a future week, which was the week beginning 5th January 2026, in both directions for each of the 6 segments. This was 168 x 2 x 6 = 2,016 calls in total. Google provides 5,000 free calls per month, with further calls charged at 0.5 pence per call.</p>
 </section>
 </section>
-<section id="bradford-road" class="level1">
-<h1>Bradford Road</h1>
-<p>For Bradford Road alone the cost of the 3 collisions (2 of which were multi-vehicle collisions) in this period comes to £371,938, broken down in the table below. <img src="plots/bradford_road_table.png" class="img-fluid"></p>
+<section id="scenarios" class="level1">
+<h1>Scenarios</h1>
+<p>The current speed limits along the road are shown in the figure below. <img src="plots/B3108_speeds_maxspeed.png" class="img-fluid"></p>
+<p>Given the complex nature of the road, with steep gradients, narrow, winding sections and proximity to residential areas there are numerous proposals. These have been broken down into scenarios</p>
+<section id="scenario-a" class="level3">
+<h3 class="anchored" data-anchor-id="scenario-a">Scenario A</h3>
+<p>Reducing the 50mph section to 40mph bringing it into line with adjoining roads</p>
+<p><img src="plots/B3108_speeds_scenario_A.png" class="img-fluid"> ### Scenario B Reducing the speed limit along the entire stretch of road to 30mph, bringing it into line with the Eastern most segment running through Bradford on Avon.</p>
+<p><img src="plots/B3108_speeds_scenario_B.png" class="img-fluid"> ### Scenario C 30mph along the full stretch but 20mph in the most built up section through Bradford on Avon, bringing it into line with other urban areas in Wiltshire. <img src="plots/B3108_speeds_scenario_C.png" class="img-fluid"> ## Scenario D 20 mph along the full stretch, the most effective at reducing noise and collision risk. <img src="plots/B3108_speeds_scenario_D.png" class="img-fluid"> ### Vision Zero 20mph might seem a bit extreme, but Wiltshire LA have committed to Vision Zero, meaning they are striving for no one to die on their roads. Currently a very long way off this target with xx deaths in 2024. This means bolder steps are maybe needed. Vision Zero relies on the principle that if people stick to the rules it should not be possible to die. The most stringent NCAP crash test cars must pass is a 64kph (40mph) collision with a solid object. Speeds faster than 40mph automatically exceed this threshold. Should vehicles collide head on, a common collision on country roads (look in stats19), the threshold falls to 20mph (a head on collision with each vehicle travelling at 20mph is roughly equivalent to a 40mph collision with a solid object). # Impact on journey time Using the data from the Google API the impact on journey time along the stretch of road was assessed. This was done by taking the average speed for each hour, the length of each stretch of road and swapping the average speed for the revised speed limit. If the speed limit was lower than the average speed the journey time was recalculated with the speed limit assumed to be the speed.</p>
+<p>The results of this for each scenario are shown in the table below for each direction <img src="plots/JT_EW.png" class="img-fluid"> <img src="plots/JT_WE.png" class="img-fluid"> The current situation is not visible on the plot, because it is behind Scenario As line as it is identical (499 seconds Westbound and 490 Eastbound). Scenario B is estimated to have a 30 second increase in both directions, C 45 second increase Westbound and 40 seconds Eastbound and D 197 seconds increase Westbound and 191 Eastbound.</p>
 </section>
-<section id="b3108-by-pass" class="level1">
-<h1>B3108 by-pass</h1>
-<p>A significant point of discussion in the local area is the B3108.</p>
-<p>The table below shows the collisions for the section that runs through the village. The total cost of prevention for these is estimated at £972,376 in the period 2010 - 2024.</p>
-<p><img src="plots/b3108_table.png" class="img-fluid"></p>
-<p>The Lower Super Area Output (LSOA) regions where casualties from collisions on the road live are shown in the plot below. <img src="plots/casualty_lsoa.png" class="img-fluid"> And the same plot but for drivers who were involved in collisions on the road (note this also includes cyclist ‘drivers’). <img src="plots/driver_lsoa.png" class="img-fluid"></p>
 </section>
-<section id="extra-data" class="level1">
-<h1>Extra data</h1>
-<p>Breaking down the total casualties in this period by some other variables</p>
-<section id="age-and-sex" class="level2">
-<h2 class="anchored" data-anchor-id="age-and-sex">Age and sex</h2>
-<p><img src="plots/sex_age.png" class="img-fluid"></p>
+<section id="economic-impact" class="level1">
+<h1>Economic impact</h1>
+<p>The DfT uses TAG data to attribute value to decisions such as speed limit changes.</p>
+<section id="values-of-time" class="level2">
+<h2 class="anchored" data-anchor-id="values-of-time">Values of time</h2>
+<p>Tables xxx from TAG have been matched to trip data for the road, disaggregating each trip by estimated economic activity. This has been combined with the journey time estimates to provide a figure for the perceived loss to the economy</p>
+<p>Calculating this for each scenario by direction gives: <img src="plots/CST_WE.png" class="img-fluid"> <img src="plots/CST_EW.png" class="img-fluid"></p>
+<p>The TAG perceived loss to the market for each Scenario over the course of a year is A: £1,644 B: £661,576 C: £801,843 D: £4,087,308</p>
+<p>There is no reason why the perceived loss to the economy of a driver taking a few seconds longer, should outweigh noise, air pollution or collision costs. People neighbouring the road have to put up with incessant noise.</p>
+<p>Evidence that uniform speed limits are less cognitively challenging</p>
+<p>20mph is most efficient speed for electric vehicles, saving drivers money.</p>
 </section>
-<section id="casualty-type" class="level2">
-<h2 class="anchored" data-anchor-id="casualty-type">Casualty type</h2>
-<p><img src="plots/casualty_type.png" class="img-fluid"></p>
+<section id="population" class="level2">
+<h2 class="anchored" data-anchor-id="population">population</h2>
+<p>An estimated 225 people live within 100 metres of the 50mph section. <img src="plots/lsoa_pop_roadside.png" class="img-fluid"></p>
+<p>Further details on how this was estimated is given in the appendix.</p>
 </section>
-<section id="speed-limit" class="level2">
-<h2 class="anchored" data-anchor-id="speed-limit">Speed limit</h2>
-<p><img src="plots/speed_limit.png" class="img-fluid"></p>
+<section id="collision-costs" class="level2">
+<h2 class="anchored" data-anchor-id="collision-costs">Collision costs</h2>
+<p>Annually it is estimated that road traffic collisions cost the UK economy £55 billion.</p>
 </section>
-<section id="junctions" class="level2">
-<h2 class="anchored" data-anchor-id="junctions">Junctions</h2>
-<p><img src="plots/junction_type.png" class="img-fluid"></p>
+<section id="trip-data" class="level2">
+<h2 class="anchored" data-anchor-id="trip-data">Trip data</h2>
+<p>The DfT last estimated the trips along the B3108 at Winsley Hill in 2019 (https://roadtraffic.dft.gov.uk/count-points/947637). Prior to this a manual count was undertaken each year for the last 10 years. The manual count data in 2018 provides a diurnal profile for each vehicle and direction. The directional data estimated in 2019 has been combined with the diurnal profile.</p>
+<p>In 2024 it was estimated that on average traffic was down slightly on 2019. Therefore, 2019 traffic data has been used for this analysis.</p>
+<p>On average 52% of vehicle traffic travels Eastbound. This reaches its peak at 6am when 74% of vehicles are travelling in this direction. At 5pm the majority (63%) of traffic flows in the Westbound direction.</p>
+<p><img src="plots/AADT_direction.png" class="img-fluid"></p>
 </section>
-<section id="weather-conditions" class="level2">
-<h2 class="anchored" data-anchor-id="weather-conditions">Weather conditions</h2>
-<p><img src="plots/weather_conditions.png" class="img-fluid"></p>
+<section id="average-speeds" class="level2">
+<h2 class="anchored" data-anchor-id="average-speeds">Average speeds</h2>
 </section>
-<section id="lighting" class="level2">
-<h2 class="anchored" data-anchor-id="lighting">Lighting</h2>
-<p><img src="plots/lighting.png" class="img-fluid"></p>
 </section>
-<section id="road-surface" class="level2">
-<h2 class="anchored" data-anchor-id="road-surface">Road surface</h2>
-<p><img src="plots/road_surface.png" class="img-fluid"></p>
+<section id="cycle-infrastructure-benefits" class="level1">
+<h1>Cycle infrastructure benefits</h1>
+<p>Narrowing the road could be achieved by adding high quality cycle and walking infrastructure to the road.</p>
+<p>Infrastructure that meets guidelines, i.e.&nbsp;not a shared footpath/cycle path that is a hotbed for</p>
+<p>TAG table 4.1.6 provides a cost benefit for cycle infrastructure to the cyclist based on the time spent cycling the infrastructure.</p>
+<p>Using the DfT estimate for cyclists using the road each day, it is estimated that the benefit for adding a segregated cycle path along the full length of the B3108, assuming a cyclist travels at 5 metres per second, would be nearly £60,000 per week or £3 million per year. Adding this, along with a high quality footpath, could reduce the road width, also reducing the speed of vehicles down the road.</p>
+<p>One of the takeaways from the analysis of STATS19 data on drivers involved in collisions on the road is that they generally live locally. Enabling people to undertake local journeys on foot or by bicycle will reduce the number of motor vehicles on the road.</p>
+<p>(map of LSOA of drivers)</p>
+</section>
+<section id="summary" class="level1">
+<h1>Summary</h1>
+<p>Adding cycle path Reducing speed limit Noise reduction collisions avoidance</p>
+</section>
+<section id="appendix" class="level1">
+<h1>Appendix</h1>
+<section id="journey-time" class="level2">
+<h2 class="anchored" data-anchor-id="journey-time">Journey time</h2>
+</section>
+<section id="local-population-calculation" class="level2">
+<h2 class="anchored" data-anchor-id="local-population-calculation">Local population calculation</h2>
+<p>The Office for National Statistics (ONS) compiles regularly updated population data for the ‘Local Super Output Areas’ (LSOA). The plot below shows the total population for LSOA areas that intersect the B3108. <img src="plots/lsoa_pop.png" class="img-fluid"> In order to estimate the population close to the road the population was distributed over the OSM buildings shapes based on the area of the buildings. The population of each building that falls within a 100m buffer of either side of the road was summed. It is estimated that just over 1400 people live within 100 metres of the B3108, the majority along Winsley Road in Bradford on Avon.</p>
 
 
 </section>

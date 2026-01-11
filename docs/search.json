@@ -7,25 +7,25 @@
     "text": "This report presents an examination of road collision and casualty data for the Parish of Winsley in Wiltshire, based on the UK Department for Transport’s official STATS19 database. shown by the orange line in the figure below.\n\nThe analysis covers the period 2010 to 2024, chosen because this is the range for which corresponding cost data cost data are available.\nThe underlying dataset comprises three linked tables collected via the STATS19 system:\n\nCollision Data: Information about each recorded incident, including location, environmental conditions, and road characteristics.\nCasualty Data: Records of everyone injured or killed in collisions, detailing injury severity, age, and sex.\nVehicle Data: Characteristics of vehicles involved in collisions. Note: vehicle data were not included in the main analysis for this report.\n\nAll three tables are connected through a unique identifier called the collision index, enabling linked summaries of collisions and casualties for analysis.\nWhere fractional counts (e.g., 0.8 Serious, 0.2 Slight) appear in the charts and tables, this reflects the use of the MAIS 3+ score to retrospectively reclassify injury severity. This adjustment allows for fairer comparisons over time and between countries, aligning with international approaches such as those used by the World Health Organization, which typically focus on fatal collisions due to variations in reporting practices across regions.\nAll results shown here — including numbers, charts, maps, and cost summaries — can be reproduced using the analysis.R script available in the project repository. Many of the Serious and Slight figures might be shown as decimals, i.e. 0.8 Serious and 0.2 Slight. This is because injuries are reclassified retrospectively according to the to enable fair comparisons between casualties and also enable comparisons between countries (e.g. the WHO only considers fatal collisions in its reporting because so many countries don’t report serious and slight injuries due to difficulties in documentation training etc.).\n\n\nThe first section assesses trends in road casualties over time.\nTotal Casualties and Severity\nBetween 2010 and 2024, the overall number of reported casualties in Winsley is summarised by severity levels (fatal, serious, slight). The time-series chart displays yearly totals.\n\nThe change in annual casualties relative to the baseline year 2010. This allows us to see whether the number and severity of casualties are increasing, decreasing, or stable over this 15-year period.\n\n\n\n\nThe next part visualises the spatial distribution of collisions within Winsley.\n\nCasualty locations are plotted on a map.\nDifferent casualty types are shown with distinct symbols and colours to help differentiate severity and type.\nA second map sizes points by severity to highlight where serious and slight injuries are clustered.\n\nThese maps reveal local hotspots where collisions occur and provide insight into whether particular parts of the parish experience higher incidence or more severe outcomes.\n And the same plot as above but sized by severity.\n All the casualties OSM links\n\n\n\n\nThe Department for Transport (DfT) also publishes economic estimates for preventing road casualties and collisions, known as the RAS4001 dataset. This model calculates the monetary cost of collisions based on:\n\nHuman costs (pain, suffering, loss of life),\nMedical and rehabilitation costs,\nLost economic output,\nProperty damage.\n\nThis dataset combines STATS19 collision records with cost values from the TAG data book, adjusted regularly for inflation and changes in data recording.\nThe values in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.\n\n The total value of prevention for the period comes to £13,233,889, an average of just over £945,000 per year."
   },
   {
-    "objectID": "index.html#trends",
-    "href": "index.html#trends",
+    "objectID": "index.html#trends-in-casualties-20102024",
+    "href": "index.html#trends-in-casualties-20102024",
     "title": "Winsley Stats19 analysis",
     "section": "",
-    "text": "The chart below shows the total casualties by severity between 2010 and 2024.\n\nand the change year on year relative to 2010."
+    "text": "The first section assesses trends in road casualties over time.\nTotal Casualties and Severity\nBetween 2010 and 2024, the overall number of reported casualties in Winsley is summarised by severity levels (fatal, serious, slight). The time-series chart displays yearly totals.\n\nThe change in annual casualties relative to the baseline year 2010. This allows us to see whether the number and severity of casualties are increasing, decreasing, or stable over this 15-year period."
   },
   {
-    "objectID": "index.html#location",
-    "href": "index.html#location",
+    "objectID": "index.html#where-collisions-are-happening-location",
+    "href": "index.html#where-collisions-are-happening-location",
     "title": "Winsley Stats19 analysis",
     "section": "",
-    "text": "The location of the casualties is shown below. Different casualty types are given a unique shape and coloured to aid distinction on the map.\n And the same plot as above but sized by severity.\n All the casualties OSM links"
+    "text": "The next part visualises the spatial distribution of collisions within Winsley.\n\nCasualty locations are plotted on a map.\nDifferent casualty types are shown with distinct symbols and colours to help differentiate severity and type.\nA second map sizes points by severity to highlight where serious and slight injuries are clustered.\n\nThese maps reveal local hotspots where collisions occur and provide insight into whether particular parts of the parish experience higher incidence or more severe outcomes.\n And the same plot as above but sized by severity.\n All the casualties OSM links"
   },
   {
-    "objectID": "index.html#dft-avoided-cost-methodology",
-    "href": "index.html#dft-avoided-cost-methodology",
+    "objectID": "index.html#economic-impact-dft-avoided-cost-analysis",
+    "href": "index.html#economic-impact-dft-avoided-cost-analysis",
     "title": "Winsley Stats19 analysis",
     "section": "",
-    "text": "The DfT’s RAS4001 dataset provides annual estimates of the economic value of preventing road collisions and casualties in Great Britain. Developed from long-standing DfT methodologies dating back to the 1990s, it combines collision and casualty data from the STATS19 reporting system with cost estimates from the TAG data book, covering human costs (pain, suffering, lost life), lost economic output, medical expenses, and property damage. Values are updated regularly to reflect inflation and changes in data collection. The dataset reports average and total costs per collision and the proportion of that value related to casualty costs, by severity (fatal, serious, slight, and damage-only). It is widely used by government and local authorities to assess the economic burden of road traffic collisions and to support cost-benefit analyses of safety interventions.\nThe values in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.\n\n The total value of prevention for the period comes to £13,233,889, an average of just over £945,000 per year."
+    "text": "The Department for Transport (DfT) also publishes economic estimates for preventing road casualties and collisions, known as the RAS4001 dataset. This model calculates the monetary cost of collisions based on:\n\nHuman costs (pain, suffering, loss of life),\nMedical and rehabilitation costs,\nLost economic output,\nProperty damage.\n\nThis dataset combines STATS19 collision records with cost values from the TAG data book, adjusted regularly for inflation and changes in data recording.\nThe values in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.\n\n The total value of prevention for the period comes to £13,233,889, an average of just over £945,000 per year."
   },
   {
     "objectID": "index.html#age-and-sex",
@@ -84,24 +84,66 @@
     "text": "These pages publish results of an analysis of the DfT Stats19 data for the Parish of Winsley, Wiltshire."
   },
   {
-    "objectID": "index.html#trends-in-casualties-20102024",
-    "href": "index.html#trends-in-casualties-20102024",
-    "title": "Winsley Stats19 analysis",
+    "objectID": "B3108_report.html",
+    "href": "B3108_report.html",
+    "title": "B3108",
     "section": "",
-    "text": "The first section assesses trends in road casualties over time.\nTotal Casualties and Severity\nBetween 2010 and 2024, the overall number of reported casualties in Winsley is summarised by severity levels (fatal, serious, slight). The time-series chart displays yearly totals.\n\nThe change in annual casualties relative to the baseline year 2010. This allows us to see whether the number and severity of casualties are increasing, decreasing, or stable over this 15-year period."
+    "text": "The B3108 goes between Bath\n\n\nThe Google Distance Matrix API enables a query between two points for a future date and using the “best guess” returns the estimated time to travel this distance based on historic data. This has been compared against measured data and found to be a good representation of vehicle speed. Model option “best guess” uses this historic data to estimate how long it might take based on past trips undertaken by people with Android phones.\nTAG cost guidance Provides costs for\nThe Google Distance Matrix API enables users to query the estimated time between two points for a specific journey start time. The best_guess traffic model in the Google Distance Matrix API is the default method for estimating travel times when accounting for traffic conditions. It returns the best estimate of travel time based on both historical traffic conditions and live traffic data, with live traffic becoming more important the closer the departure time is to the current moment. Google This parameter can only be used for driving directions and requires specifying a departure time that is either current or in the future. Unlike the alternative traffic models (optimistic and pessimistic), which provide upper and lower bounds on travel time, best_guess aims to provide the most realistic single prediction by integrating real-time road conditions with historical patterns https://developers.google.com/maps/documentation/distance-matrix/distance-matrix\nThe road was split into 6 sections, based on the Open Street Map (OSM) segments, with some segments joined together to simplify the model and reduce the number of calls to the Google API shown in more detail in the Appendix. Described from West to East, Link 1 (L01) is the section of Lower Stoke Road that joins Warminster Road. The colour of each link is the mean speed in both directions as per the scale shown in L06 from the Google Distance Matrix API queries. With each section is the speed profile split by direction.\n  L02 is the section from Midford Brook bridge to the base of Winsley Hill.   L03 is Winsley Hill up to where the speed limit currently changes to 50 mph, at the junction with Woodlands Drive.   L04 is the 50mph section of the bypass, stretching all the way to the roundabout with Winsley and Bradford Roads.   L05 is the 40 mph section of Winsley Road   L06 the 30mph section of Winsley Road.  \nEach segment was queried for each hour of a future week, which was the week beginning 5th January 2026, in both directions for each of the 6 segments. This was 168 x 2 x 6 = 2,016 calls in total. Google provides 5,000 free calls per month, with further calls charged at 0.5 pence per call."
   },
   {
-    "objectID": "index.html#where-collisions-are-happening-location",
-    "href": "index.html#where-collisions-are-happening-location",
-    "title": "Winsley Stats19 analysis",
+    "objectID": "B3108_report.html#typical-speeds",
+    "href": "B3108_report.html#typical-speeds",
+    "title": "B3108",
     "section": "",
-    "text": "The next part visualises the spatial distribution of collisions within Winsley.\n\nCasualty locations are plotted on a map.\nDifferent casualty types are shown with distinct symbols and colours to help differentiate severity and type.\nA second map sizes points by severity to highlight where serious and slight injuries are clustered.\n\nThese maps reveal local hotspots where collisions occur and provide insight into whether particular parts of the parish experience higher incidence or more severe outcomes.\n And the same plot as above but sized by severity.\n All the casualties OSM links"
+    "text": "The Google Distance Matrix API enables a query between two points for a future date and using the “best guess” returns the estimated time to travel this distance based on historic data. This has been compared against measured data and found to be a good representation of vehicle speed. Model option “best guess” uses this historic data to estimate how long it might take based on past trips undertaken by people with Android phones.\nTAG cost guidance Provides costs for\nThe Google Distance Matrix API enables users to query the estimated time between two points for a specific journey start time. The best_guess traffic model in the Google Distance Matrix API is the default method for estimating travel times when accounting for traffic conditions. It returns the best estimate of travel time based on both historical traffic conditions and live traffic data, with live traffic becoming more important the closer the departure time is to the current moment. Google This parameter can only be used for driving directions and requires specifying a departure time that is either current or in the future. Unlike the alternative traffic models (optimistic and pessimistic), which provide upper and lower bounds on travel time, best_guess aims to provide the most realistic single prediction by integrating real-time road conditions with historical patterns https://developers.google.com/maps/documentation/distance-matrix/distance-matrix\nThe road was split into 6 sections, based on the Open Street Map (OSM) segments, with some segments joined together to simplify the model and reduce the number of calls to the Google API shown in more detail in the Appendix. Described from West to East, Link 1 (L01) is the section of Lower Stoke Road that joins Warminster Road. The colour of each link is the mean speed in both directions as per the scale shown in L06 from the Google Distance Matrix API queries. With each section is the speed profile split by direction.\n  L02 is the section from Midford Brook bridge to the base of Winsley Hill.   L03 is Winsley Hill up to where the speed limit currently changes to 50 mph, at the junction with Woodlands Drive.   L04 is the 50mph section of the bypass, stretching all the way to the roundabout with Winsley and Bradford Roads.   L05 is the 40 mph section of Winsley Road   L06 the 30mph section of Winsley Road.  \nEach segment was queried for each hour of a future week, which was the week beginning 5th January 2026, in both directions for each of the 6 segments. This was 168 x 2 x 6 = 2,016 calls in total. Google provides 5,000 free calls per month, with further calls charged at 0.5 pence per call."
   },
   {
-    "objectID": "index.html#economic-impact-dft-avoided-cost-analysis",
-    "href": "index.html#economic-impact-dft-avoided-cost-analysis",
-    "title": "Winsley Stats19 analysis",
-    "section": "",
-    "text": "The Department for Transport (DfT) also publishes economic estimates for preventing road casualties and collisions, known as the RAS4001 dataset. This model calculates the monetary cost of collisions based on:\n\nHuman costs (pain, suffering, loss of life),\nMedical and rehabilitation costs,\nLost economic output,\nProperty damage.\n\nThis dataset combines STATS19 collision records with cost values from the TAG data book, adjusted regularly for inflation and changes in data recording.\nThe values in the table RAS4001 have been matched with the casualty data for the period 2010-2024 and summarised in the table and plot below.\n\n The total value of prevention for the period comes to £13,233,889, an average of just over £945,000 per year."
+    "objectID": "B3108_report.html#values-of-time",
+    "href": "B3108_report.html#values-of-time",
+    "title": "B3108",
+    "section": "Values of time",
+    "text": "Values of time\nTables xxx from TAG have been matched to trip data for the road, disaggregating each trip by estimated economic activity. This has been combined with the journey time estimates to provide a figure for the perceived loss to the economy\nCalculating this for each scenario by direction gives:  \nThe TAG perceived loss to the market for each Scenario over the course of a year is A: £1,644 B: £661,576 C: £801,843 D: £4,087,308\nThere is no reason why the perceived loss to the economy of a driver taking a few seconds longer, should outweigh noise, air pollution or collision costs. People neighbouring the road have to put up with incessant noise.\nEvidence that uniform speed limits are less cognitively challenging\n20mph is most efficient speed for electric vehicles, saving drivers money."
+  },
+  {
+    "objectID": "B3108_report.html#population",
+    "href": "B3108_report.html#population",
+    "title": "B3108",
+    "section": "population",
+    "text": "population\nAn estimated 225 people live within 100 metres of the 50mph section. \nFurther details on how this was estimated is given in the appendix."
+  },
+  {
+    "objectID": "B3108_report.html#collision-costs",
+    "href": "B3108_report.html#collision-costs",
+    "title": "B3108",
+    "section": "Collision costs",
+    "text": "Collision costs\nAnnually it is estimated that road traffic collisions cost the UK economy £55 billion."
+  },
+  {
+    "objectID": "B3108_report.html#trip-data",
+    "href": "B3108_report.html#trip-data",
+    "title": "B3108",
+    "section": "Trip data",
+    "text": "Trip data\nThe DfT last estimated the trips along the B3108 at Winsley Hill in 2019 (https://roadtraffic.dft.gov.uk/count-points/947637). Prior to this a manual count was undertaken each year for the last 10 years. The manual count data in 2018 provides a diurnal profile for each vehicle and direction. The directional data estimated in 2019 has been combined with the diurnal profile.\nIn 2024 it was estimated that on average traffic was down slightly on 2019. Therefore, 2019 traffic data has been used for this analysis.\nOn average 52% of vehicle traffic travels Eastbound. This reaches its peak at 6am when 74% of vehicles are travelling in this direction. At 5pm the majority (63%) of traffic flows in the Westbound direction."
+  },
+  {
+    "objectID": "B3108_report.html#average-speeds",
+    "href": "B3108_report.html#average-speeds",
+    "title": "B3108",
+    "section": "Average speeds",
+    "text": "Average speeds"
+  },
+  {
+    "objectID": "B3108_report.html#journey-time",
+    "href": "B3108_report.html#journey-time",
+    "title": "B3108",
+    "section": "Journey time",
+    "text": "Journey time"
+  },
+  {
+    "objectID": "B3108_report.html#local-population-calculation",
+    "href": "B3108_report.html#local-population-calculation",
+    "title": "B3108",
+    "section": "Local population calculation",
+    "text": "Local population calculation\nThe Office for National Statistics (ONS) compiles regularly updated population data for the ‘Local Super Output Areas’ (LSOA). The plot below shows the total population for LSOA areas that intersect the B3108.  In order to estimate the population close to the road the population was distributed over the OSM buildings shapes based on the area of the buildings. The population of each building that falls within a 100m buffer of either side of the road was summed. It is estimated that just over 1400 people live within 100 metres of the B3108, the majority along Winsley Road in Bradford on Avon."
   }
 ]
